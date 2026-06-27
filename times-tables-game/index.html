@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Times Tables Turbo - Car Racing Maths!</title>
+<style>
+  :root {
+    --track: #2a2a2a;
+    --road: #444;
+    --grass: #3a7d44;
+    --sky: #87ceeb;
+    --accent: #ff6b35;
+    --gold: #ffd700;
+    --correct: #4caf50;
+    --wrong: #f44336;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: var(--sky);
+    min-height: 100vh;
+    overflow: hidden;
+  }
+
+  /* ── SCREENS ── */
+  .screen { display: none; width: 100vw; height: 100vh; }
+  .screen.active { display: flex; }
+
+  /* ── MENU SCREEN ── */
+  #menuScreen {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(180deg, #87ceeb 0%, #c8e6c9 70%, #3a7d44 70%, #3a7d44 100%);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .clouds {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    pointer-events: none;
+  }
+  .cloud {
+    position: absolute;
+    background: white;
+    border-radius: 50px;
+    opacity: 0.9;
+    animation: drift linear infinite;
+  }
+  .cloud::before, .cloud::after {
+    content: '';
+    position: absolute;
+    background: white;
+    border-radius: 50%;
+  }
+  @keyframes drift {
+    from { transform: translateX(-150px); }
+    to   { transform: translateX(110vw); }
+  }
+
+  .menu-title {
+    text-align: center;
+    z-index: 10;
+    margin-bottom: 30px;
+  }
+  .menu-title h1 {
+    font-size: clamp(2rem, 6vw, 4rem);
+    color: #fff;
+    text-shadow: 3px 3px 0 #e65100, -1px -1px 0 #e65100;
+    letter-spacing: 2px;
+    line-height: 1.1;
+  }
+  .menu-title p {
+    font-size: 1.1rem;
+    color: #fff;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+    margin-top: 6px;
+  }
+
+  .menu-car {
+    font-size: 5rem;
+    animation: bounce 0.6s ease-in-out infinite alternate;
+    z-index: 10;
+    margin-bottom: 10px;
+  }
+  @keyframes bounce {
+    to { transform: translateY(-10px); }
+  }
+
+  .menu-card {
+    background: rgba(255,255,255,0.92);
+    border-radius: 20px;
+    padding: 30px 40px;
+    z-index: 10;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    max-width: 480px;
+    width: 90%;
+  }
+
+  .menu-card label {
+    display: block;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 8px;
+    font-size: 1rem;
+  }
+
+  .name-input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 3px solid #ddd;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+    transition: border-color 0.2s;
+  }
+  .name-input:focus { outline: none; border-color: var(--accent); }
+
+  .table-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-bottom: 24px;
+  }
+  .table-btn {
+    padding: 10px;
+    border: 3px solid #ddd;
+    border-radius: 10px;
+    background: white;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s;
+    color: #333;
+  }
+  .table-btn:hover { border-color: var(--accent); background: #fff3ee; }
+  .table-btn.selected { background: var(--accent); border-color: var(--accent); color: white; }
+
+  .select-all-btn {
+    width: 100%;
+    padding: 10px;
+    border: 3px solid #ddd;
+    border-radius: 10px;
+    background: white;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    margin-bottom: 16px;
+    color: #555;
+    transition: all 0.15s;
+  }
+  .select-all-btn:hover { border-color: var(--accent); }
+
+  .difficulty-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 24px;
+  }
+  .diff-btn {
+    flex: 1;
+    padding: 10px;
+    border: 3px solid #ddd;
+    border-radius: 10px;
+    background: white;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s;
+    color: #333;
+  }
+  .diff-btn:hover { border-color: #888; }
+  .diff-btn.selected { color: white; border-color: transparent; }
+  .diff-btn[data-diff="easy"].selected { background: #4caf50; }
+  .diff-btn[data-diff="medium"].selected { background: #ff9800; }
+  .diff-btn[data-diff="hard"].selected { background: #f44336; }
+
+  .start-btn {
+    width: 100%;
+    padding: 16px;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 14px;
+    font-size: 1.3rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: transform 0.1s, box-shadow 0.1s;
+    box-shadow: 0 4px 0 #c0392b;
+    letter-spacing: 1px;
+  }
+  .start-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 0 #c0392b; }
+  .start-btn:active { transform: translateY(2px); box-shadow: 0 2px 0 #c0392b; }
+  .start-btn:disabled { background: #ccc; box-shadow: 0 4px 0 #aaa; cursor: not-allowed; transform: none; }
+
+  .high-scores-link {
+    text-align: center;
+    margin-top: 14px;
+    font-size: 0.9rem;
+    color: #666;
+    cursor: pointer;
+    text-decoration: underline;
+  }
+
+  /* ── GAME SCREEN ── */
+  #gameScreen {
+    flex-direction: column;
+    background: var(--sky);
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Sky background with animated clouds */
+  #gameScreen .sky-bg {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, #87ceeb 0%, #b8dff5 60%);
+    z-index: 0;
+  }
+
+  /* HUD */
+  .hud {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background: rgba(0,0,0,0.75);
+    color: white;
+    z-index: 20;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .hud-item {
+    text-align: center;
+  }
+  .hud-label { font-size: 0.65rem; opacity: 0.7; text-transform: uppercase; letter-spacing: 1px; }
+  .hud-value { font-size: 1.4rem; font-weight: 800; }
+  .hud-value.timer { color: var(--gold); }
+  .hud-value.score-val { color: #7ef07e; }
+  .hud-value.streak-val { color: #ff9f43; }
+
+  /* Race track */
+  .track-container {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+  }
+
+  .track-scene {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 200px;
+  }
+
+  /* Infinite scrolling road */
+  .road {
+    position: absolute;
+    bottom: 0; left: -50%; right: -50%;
+    height: 100px;
+    background: #555;
+    overflow: hidden;
+  }
+  .road-line {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 8px;
+    width: 80px;
+    background: #fff;
+    border-radius: 4px;
+    animation: roadScroll linear infinite;
+  }
+  @keyframes roadScroll {
+    from { left: 110%; }
+    to   { left: -10%; }
+  }
+
+  /* Grass */
+  .grass-strip {
+    position: absolute;
+    bottom: 100px; left: -50%; right: -50%;
+    height: 100px;
+    background: repeating-linear-gradient(90deg, #3a7d44 0px, #3a7d44 60px, #2d6636 60px, #2d6636 120px);
+    animation: grassScroll linear infinite;
+  }
+  @keyframes grassScroll {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-120px); }
+  }
+
+  /* Kerb strips */
+  .kerb { position: absolute; left: -50%; right: -50%; height: 14px; overflow: hidden; }
+  .kerb-top { top: 96px; bottom: auto; }
+  .kerb-bottom { bottom: 96px; top: auto; }
+  .kerb::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; width: 200%;
+    height: 100%;
+    background: repeating-linear-gradient(90deg, #fff 0px, #fff 20px, #e63946 20px, #e63946 40px);
+    animation: kerbScroll linear infinite;
+  }
+  @keyframes kerbScroll {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-40px); }
+  }
+
+  /* Background scenery */
+  .scenery {
+    position: absolute;
+    bottom: 200px;
+    animation: sceneryScroll linear infinite;
+  }
+  @keyframes sceneryScroll {
+    from { transform: translateX(110vw); }
+    to   { transform: translateX(-20vw); }
+  }
+
+  /* Player car */
+  .player-car {
+    position: absolute;
+    bottom: 114px;
+    left: 18%;
+    font-size: 4rem;
+    z-index: 10;
+    transition: bottom 0.15s;
+    filter: drop-shadow(2px 4px 4px rgba(0,0,0,0.4));
+    transform: scaleX(-1);
+  }
+
+  /* Opponent car */
+  .opponent-car {
+    position: absolute;
+    bottom: 130px;
+    right: 5%;
+    font-size: 3.2rem;
+    z-index: 9;
+    filter: drop-shadow(2px 4px 4px rgba(0,0,0,0.3));
+    transform: scaleX(-1);
+    animation: opponentRock 0.3s ease-in-out infinite alternate;
+  }
+  @keyframes opponentRock {
+    to { transform: scaleX(-1) translateY(-3px); }
+  }
+
+  /* Progress bar / race track overhead */
+  .progress-bar-container {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(90%, 500px);
+    z-index: 20;
+  }
+  .progress-track {
+    background: rgba(0,0,0,0.4);
+    border-radius: 20px;
+    height: 28px;
+    position: relative;
+    overflow: hidden;
+    border: 2px solid rgba(255,255,255,0.3);
+  }
+  .progress-fill {
+    height: 100%;
+    border-radius: 20px;
+    background: linear-gradient(90deg, #ff6b35, #ffd700);
+    transition: width 0.4s ease;
+    position: relative;
+  }
+  .progress-car-icon {
+    position: absolute;
+    right: -12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.2rem;
+  }
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    color: white;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+    padding: 2px 4px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  /* Question area */
+  .question-panel {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 215px;
+    z-index: 30;
+    text-align: center;
+    width: min(95%, 520px);
+  }
+  .question-text {
+    font-size: clamp(2.2rem, 7vw, 3.8rem);
+    font-weight: 900;
+    color: white;
+    text-shadow: 2px 2px 0 #000, -2px 2px 0 #000, 2px -2px 0 #000;
+    margin-bottom: 12px;
+    letter-spacing: 1px;
+  }
+
+  .answers-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .answer-btn {
+    padding: 16px 10px;
+    border: none;
+    border-radius: 14px;
+    background: rgba(255,255,255,0.95);
+    font-size: 1.5rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: transform 0.1s, box-shadow 0.1s;
+    box-shadow: 0 4px 0 rgba(0,0,0,0.25);
+    color: #222;
+  }
+  .answer-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 0 rgba(0,0,0,0.25); }
+  .answer-btn:active:not(:disabled) { transform: translateY(2px); box-shadow: 0 2px 0 rgba(0,0,0,0.25); }
+  .answer-btn.correct  { background: var(--correct); color: white; animation: pop 0.3s ease; }
+  .answer-btn.wrong    { background: var(--wrong);   color: white; animation: shake 0.3s ease; }
+  .answer-btn:disabled { cursor: default; }
+
+  @keyframes pop {
+    0%  { transform: scale(1); }
+    50% { transform: scale(1.12); }
+    100%{ transform: scale(1); }
+  }
+  @keyframes shake {
+    0%,100% { transform: translateX(0); }
+    25%     { transform: translateX(-8px); }
+    75%     { transform: translateX(8px); }
+  }
+
+  /* Flash overlays */
+  .flash-correct, .flash-wrong {
+    position: fixed; inset: 0; z-index: 100; pointer-events: none;
+    opacity: 0; transition: opacity 0.1s;
+  }
+  .flash-correct { background: rgba(76,175,80,0.25); }
+  .flash-wrong   { background: rgba(244,67,54,0.25); }
+  .flash-correct.show, .flash-wrong.show { opacity: 1; }
+
+  /* Floating score text */
+  .float-score {
+    position: fixed;
+    font-size: 2rem;
+    font-weight: 900;
+    pointer-events: none;
+    z-index: 200;
+    animation: floatUp 0.9s ease-out forwards;
+  }
+  .float-score.pos { color: #4caf50; text-shadow: 1px 1px 0 #000; }
+  .float-score.neg { color: #f44336; text-shadow: 1px 1px 0 #000; }
+  @keyframes floatUp {
+    0%   { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(-80px); }
+  }
+
+  /* Speed lines */
+  .speed-line {
+    position: fixed;
+    top: 0; height: 2px;
+    background: rgba(255,255,255,0.6);
+    pointer-events: none;
+    z-index: 50;
+    animation: speedLine 0.4s linear forwards;
+  }
+  @keyframes speedLine {
+    from { left: 18vw; width: 0; opacity: 1; }
+    to   { left: 0; width: 18vw; opacity: 0; }
+  }
+
+  /* ── RESULT SCREEN ── */
+  #resultScreen {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    color: white;
+    gap: 20px;
+    padding: 20px;
+  }
+
+  .result-trophy { font-size: 5rem; animation: trophyBounce 0.5s ease-in-out infinite alternate; }
+  @keyframes trophyBounce { to { transform: translateY(-12px) rotate(5deg); } }
+
+  .result-title {
+    font-size: clamp(1.8rem, 5vw, 3rem);
+    font-weight: 900;
+    text-align: center;
+    color: var(--gold);
+    text-shadow: 2px 2px 0 #8B6914;
+  }
+
+  .result-stats {
+    background: rgba(255,255,255,0.1);
+    border-radius: 20px;
+    padding: 24px 40px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px 32px;
+    text-align: center;
+    border: 1px solid rgba(255,255,255,0.15);
+    max-width: 400px;
+    width: 90%;
+  }
+  .stat-item .stat-num { font-size: 2.2rem; font-weight: 900; color: var(--gold); }
+  .stat-item .stat-lbl { font-size: 0.75rem; opacity: 0.7; text-transform: uppercase; letter-spacing: 1px; }
+
+  .result-message {
+    font-size: 1.1rem;
+    text-align: center;
+    max-width: 400px;
+    opacity: 0.85;
+    padding: 0 10px;
+  }
+
+  .result-btns { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; }
+  .btn-primary {
+    padding: 14px 32px;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 14px;
+    font-size: 1.1rem;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 4px 0 #c0392b;
+    transition: transform 0.1s, box-shadow 0.1s;
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 0 #c0392b; }
+  .btn-secondary {
+    padding: 14px 32px;
+    background: rgba(255,255,255,0.15);
+    color: white;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-radius: 14px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .btn-secondary:hover { background: rgba(255,255,255,0.25); }
+
+  /* new high score badge */
+  .new-record {
+    background: linear-gradient(135deg, var(--gold), #ff9f43);
+    color: #333;
+    font-weight: 900;
+    padding: 8px 20px;
+    border-radius: 30px;
+    font-size: 1rem;
+    animation: pop 0.4s ease;
+    display: none;
+  }
+  .new-record.visible { display: block; }
+
+  /* ── SCOREBOARD SCREEN ── */
+  #scoreScreen {
+    flex-direction: column;
+    align-items: center;
+    background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%);
+    color: white;
+    padding: 30px 20px;
+    overflow-y: auto;
+  }
+  .score-title { font-size: 2rem; font-weight: 900; color: var(--gold); margin-bottom: 20px; }
+  .score-table {
+    width: min(100%, 500px);
+    border-collapse: collapse;
+    margin-bottom: 20px;
+  }
+  .score-table th {
+    background: rgba(255,255,255,0.1);
+    padding: 12px 16px;
+    text-align: left;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: rgba(255,255,255,0.7);
+  }
+  .score-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    font-weight: 600;
+  }
+  .score-table tr:nth-child(1) td { color: var(--gold); font-size: 1.1rem; }
+  .score-table tr:nth-child(2) td { color: #c0c0c0; }
+  .score-table tr:nth-child(3) td { color: #cd7f32; }
+  .score-empty { opacity: 0.5; font-style: italic; margin: 30px 0; }
+</style>
+</head>
+<body>
+
+<!-- ════════════════ MENU ════════════════ -->
+<div id="menuScreen" class="screen active">
+  <div class="clouds" id="menuClouds"></div>
+
+  <div class="menu-car">🏎️</div>
+  <div class="menu-title">
+    <h1>Times Tables<br>TURBO</h1>
+    <p>Answer fast — race faster! 🏁</p>
+  </div>
+
+  <div class="menu-card">
+    <label for="playerName">Your name, driver</label>
+    <input type="text" id="playerName" class="name-input" placeholder="e.g. Max Speed" maxlength="16" autocomplete="off">
+
+    <label>Which tables? (pick at least one)</label>
+    <div class="table-grid" id="tableGrid"></div>
+    <button class="select-all-btn" id="selectAllBtn">Select all tables</button>
+
+    <label>Difficulty</label>
+    <div class="difficulty-row">
+      <button class="diff-btn selected" data-diff="easy">🟢 Easy<br><small>60s</small></button>
+      <button class="diff-btn" data-diff="medium">🟡 Medium<br><small>45s</small></button>
+      <button class="diff-btn" data-diff="hard">🔴 Hard<br><small>30s</small></button>
+    </div>
+
+    <button class="start-btn" id="startBtn" disabled>🏁 Start Race!</button>
+    <div class="high-scores-link" id="showScoresLink">🏆 High Scores</div>
+  </div>
+</div>
+
+<!-- ════════════════ GAME ════════════════ -->
+<div id="gameScreen" class="screen">
+  <div class="sky-bg"></div>
+
+  <!-- HUD -->
+  <div class="hud">
+    <div class="hud-item">
+      <div class="hud-label">Driver</div>
+      <div class="hud-value" id="hudName">—</div>
+    </div>
+    <div class="hud-item">
+      <div class="hud-label">Time</div>
+      <div class="hud-value timer" id="hudTimer">60</div>
+    </div>
+    <div class="hud-item">
+      <div class="hud-label">Score</div>
+      <div class="hud-value score-val" id="hudScore">0</div>
+    </div>
+    <div class="hud-item">
+      <div class="hud-label">Streak 🔥</div>
+      <div class="hud-value streak-val" id="hudStreak">0</div>
+    </div>
+    <div class="hud-item">
+      <div class="hud-label">Correct</div>
+      <div class="hud-value" id="hudCorrect">0/0</div>
+    </div>
+  </div>
+
+  <div class="track-container" id="trackContainer">
+    <!-- Progress bar -->
+    <div class="progress-bar-container">
+      <div class="progress-label">
+        <span>🚦 Start</span>
+        <span>🏁 Finish</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="progressFill" style="width:0%">
+          <span class="progress-car-icon">🏎️</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Question -->
+    <div class="question-panel">
+      <div class="question-text" id="questionText">3 × 7 = ?</div>
+      <div class="answers-grid" id="answersGrid"></div>
+    </div>
+
+    <!-- Track scene -->
+    <div class="track-scene" id="trackScene">
+      <div class="grass-strip" id="grassStrip"></div>
+      <div class="kerb kerb-top" id="kerbTop"></div>
+      <div class="road" id="road"></div>
+      <div class="kerb kerb-bottom" id="kerbBottom"></div>
+      <div class="player-car" id="playerCar">🏎️</div>
+      <div class="opponent-car" id="opponentCar">🚗</div>
+    </div>
+  </div>
+
+  <!-- Flash overlays -->
+  <div class="flash-correct" id="flashCorrect"></div>
+  <div class="flash-wrong"   id="flashWrong"></div>
+</div>
+
+<!-- ════════════════ RESULT ════════════════ -->
+<div id="resultScreen" class="screen">
+  <div class="result-trophy" id="resultTrophy">🏆</div>
+  <div class="result-title" id="resultTitle">Race Over!</div>
+  <div class="new-record" id="newRecord">🌟 NEW HIGH SCORE!</div>
+  <div class="result-stats">
+    <div class="stat-item"><div class="stat-num" id="resFinalScore">0</div><div class="stat-lbl">Score</div></div>
+    <div class="stat-item"><div class="stat-num" id="resAccuracy">0%</div><div class="stat-lbl">Accuracy</div></div>
+    <div class="stat-item"><div class="stat-num" id="resCorrect">0</div><div class="stat-lbl">Correct</div></div>
+    <div class="stat-item"><div class="stat-num" id="resBestStreak">0</div><div class="stat-lbl">Best Streak</div></div>
+  </div>
+  <div class="result-message" id="resultMessage"></div>
+  <div class="result-btns">
+    <button class="btn-primary" id="playAgainBtn">🔄 Race Again</button>
+    <button class="btn-secondary" id="menuBtn">🏠 Menu</button>
+    <button class="btn-secondary" id="resultScoresBtn">🏆 Scores</button>
+  </div>
+</div>
+
+<!-- ════════════════ SCOREBOARD ════════════════ -->
+<div id="scoreScreen" class="screen">
+  <div class="score-title">🏆 Hall of Fame</div>
+  <table class="score-table" id="scoreTable">
+    <thead><tr><th>#</th><th>Driver</th><th>Score</th><th>Accuracy</th><th>Tables</th></tr></thead>
+    <tbody id="scoreBody"></tbody>
+  </table>
+  <div class="score-empty" id="scoreEmpty" style="display:none">No races yet. Be the first! 🏁</div>
+  <button class="btn-primary" id="scoreBackBtn">← Back</button>
+</div>
+
+<script>
+// ─── STATE ───────────────────────────────────────────────────────────────────
+const DIFFICULTY = { easy: 60, medium: 45, hard: 30 };
+const SCORE_CORRECT   = 10;
+const SCORE_WRONG     = -3;
+const STREAK_BONUS    = 5;  // extra per question when streak ≥ 3
+const MAX_LAPS        = 20; // questions to "finish the race"
+
+let state = {
+  name: '',
+  tables: new Set(),
+  difficulty: 'easy',
+  score: 0,
+  correct: 0,
+  wrong: 0,
+  streak: 0,
+  bestStreak: 0,
+  progress: 0,   // 0-100
+  timeLeft: 60,
+  timerInterval: null,
+  answered: false,
+  animSpeed: 4,  // seconds per road line cycle
+  currentAnswer: null,
+  questionCount: 0,
+};
+
+// ─── DOM REFS ────────────────────────────────────────────────────────────────
+const screens     = { menu: menuScreen, game: gameScreen, result: resultScreen, score: scoreScreen };
+const $ = id => document.getElementById(id);
+
+// ─── SCREENS ─────────────────────────────────────────────────────────────────
+function showScreen(name) {
+  Object.values(screens).forEach(s => s.classList.remove('active'));
+  screens[name].classList.add('active');
+}
+
+// ─── MENU SETUP ──────────────────────────────────────────────────────────────
+function buildMenu() {
+  // Table buttons 1-12
+  const grid = $('tableGrid');
+  grid.innerHTML = '';
+  for (let i = 1; i <= 12; i++) {
+    const btn = document.createElement('button');
+    btn.className = 'table-btn';
+    btn.textContent = `×${i}`;
+    btn.dataset.table = i;
+    btn.addEventListener('click', () => {
+      btn.classList.toggle('selected');
+      if (btn.classList.contains('selected')) state.tables.add(i);
+      else state.tables.delete(i);
+      updateStartBtn();
+    });
+    grid.appendChild(btn);
+  }
+
+  // Default select ×2, ×5, ×10
+  [2,5,10].forEach(n => {
+    state.tables.add(n);
+    grid.querySelector(`[data-table="${n}"]`).classList.add('selected');
+  });
+
+  // Difficulty buttons
+  document.querySelectorAll('.diff-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      state.difficulty = btn.dataset.diff;
+    });
+  });
+
+  // Select all
+  let allSelected = false;
+  $('selectAllBtn').addEventListener('click', () => {
+    allSelected = !allSelected;
+    state.tables.clear();
+    document.querySelectorAll('.table-btn').forEach(btn => {
+      if (allSelected) { btn.classList.add('selected'); state.tables.add(+btn.dataset.table); }
+      else btn.classList.remove('selected');
+    });
+    $('selectAllBtn').textContent = allSelected ? 'Deselect all' : 'Select all tables';
+    updateStartBtn();
+  });
+
+  $('playerName').addEventListener('input', updateStartBtn);
+  $('startBtn').addEventListener('click', startGame);
+  $('showScoresLink').addEventListener('click', () => showScoreboard('menu'));
+
+  animateClouds($('menuClouds'), 5);
+  updateStartBtn();
+}
+
+function updateStartBtn() {
+  const ok = $('playerName').value.trim().length > 0 && state.tables.size > 0;
+  $('startBtn').disabled = !ok;
+}
+
+// ─── CLOUD ANIMATION ─────────────────────────────────────────────────────────
+function animateClouds(container, count) {
+  container.innerHTML = '';
+  for (let i = 0; i < count; i++) {
+    const c = document.createElement('div');
+    c.className = 'cloud';
+    const w = 80 + Math.random() * 120;
+    const h = w * 0.45;
+    c.style.cssText = `
+      width:${w}px; height:${h}px;
+      top:${Math.random() * 45}%;
+      animation-duration:${15 + Math.random() * 20}s;
+      animation-delay:-${Math.random() * 30}s;
+    `;
+    c.style.setProperty('--before-w', `${w*0.6}px`);
+    c.style.setProperty('--before-h', `${h*0.8}px`);
+    container.appendChild(c);
+  }
+}
+
+// ─── ROAD LINES ──────────────────────────────────────────────────────────────
+function buildRoadLines(road, speed) {
+  road.innerHTML = '';
+  for (let i = 0; i < 8; i++) {
+    const line = document.createElement('div');
+    line.className = 'road-line';
+    const dur = speed + Math.random() * 0.5;
+    line.style.animationDuration = `${dur}s`;
+    line.style.animationDelay = `-${(i / 8) * dur}s`;
+    road.appendChild(line);
+  }
+}
+
+function setRoadSpeed(speed) {
+  // lower number = faster
+  document.querySelectorAll('.road-line').forEach(l => l.style.animationDuration = `${speed}s`);
+  $('grassStrip').style.animationDuration = `${speed * 0.8}s`;
+  document.querySelectorAll('.kerb::after').forEach(k => k.style.animationDuration = `${speed * 0.4}s`);
+  // apply via CSS variable on the road
+  const road = $('road');
+  road.style.setProperty('--spd', `${speed}s`);
+}
+
+// ─── GAME START ───────────────────────────────────────────────────────────────
+function startGame() {
+  state.name       = $('playerName').value.trim();
+  state.difficulty = document.querySelector('.diff-btn.selected').dataset.diff;
+  state.timeLeft   = DIFFICULTY[state.difficulty];
+  state.score      = 0;
+  state.correct    = 0;
+  state.wrong      = 0;
+  state.streak     = 0;
+  state.bestStreak = 0;
+  state.progress   = 0;
+  state.animSpeed  = 4;
+  state.answered   = false;
+  state.questionCount = 0;
+
+  $('hudName').textContent     = state.name;
+  $('hudTimer').textContent    = state.timeLeft;
+  $('hudScore').textContent    = state.score;
+  $('hudStreak').textContent   = state.streak;
+  $('hudCorrect').textContent  = '0/0';
+  $('progressFill').style.width = '0%';
+
+  buildRoadLines($('road'), state.animSpeed);
+  showScreen('game');
+
+  nextQuestion();
+  state.timerInterval = setInterval(tick, 1000);
+}
+
+// ─── TIMER ────────────────────────────────────────────────────────────────────
+function tick() {
+  state.timeLeft--;
+  $('hudTimer').textContent = state.timeLeft;
+  if (state.timeLeft <= 10) $('hudTimer').style.color = '#ff6b6b';
+  else $('hudTimer').style.color = '';
+  if (state.timeLeft <= 0) endGame();
+}
+
+// ─── QUESTION GENERATION ─────────────────────────────────────────────────────
+function newQuestion() {
+  const tables = [...state.tables];
+  const a = tables[Math.floor(Math.random() * tables.length)];
+  const b = Math.floor(Math.random() * 12) + 1;
+  const answer = a * b;
+
+  // Generate 3 wrong answers (unique, plausible)
+  const wrongs = new Set();
+  while (wrongs.size < 3) {
+    let w;
+    const r = Math.random();
+    if (r < 0.4) w = answer + (Math.floor(Math.random() * 4) + 1) * (Math.random() < 0.5 ? 1 : -1);
+    else if (r < 0.7) w = a * (Math.floor(Math.random() * 12) + 1);
+    else w = (Math.floor(Math.random() * 12) + 1) * (Math.floor(Math.random() * 12) + 1);
+    if (w !== answer && w > 0 && !wrongs.has(w)) wrongs.add(w);
+  }
+
+  const options = [...wrongs, answer].sort(() => Math.random() - 0.5);
+  return { a, b, answer, options };
+}
+
+function nextQuestion() {
+  if (state.timeLeft <= 0) return;
+  const q = newQuestion();
+  state.currentAnswer = q.answer;
+  state.answered = false;
+  state.questionCount++;
+
+  $('questionText').textContent = `${q.a} × ${q.b} = ?`;
+
+  const grid = $('answersGrid');
+  grid.innerHTML = '';
+  q.options.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className = 'answer-btn';
+    btn.textContent = opt;
+    btn.addEventListener('click', () => handleAnswer(opt, btn));
+    grid.appendChild(btn);
+  });
+}
+
+// ─── ANSWER HANDLING ─────────────────────────────────────────────────────────
+function handleAnswer(chosen, btn) {
+  if (state.answered || state.timeLeft <= 0) return;
+  state.answered = true;
+
+  const correct = chosen === state.currentAnswer;
+  disableAnswers();
+
+  if (correct) {
+    state.correct++;
+    state.streak++;
+    if (state.streak > state.bestStreak) state.bestStreak = state.streak;
+    const bonus = state.streak >= 3 ? STREAK_BONUS * Math.min(state.streak - 2, 4) : 0;
+    const gained = SCORE_CORRECT + bonus;
+    state.score += gained;
+    state.progress = Math.min(100, state.progress + (100 / MAX_LAPS));
+    state.animSpeed = Math.max(1.2, state.animSpeed - 0.2);
+    setRoadSpeed(state.animSpeed);
+
+    btn.classList.add('correct');
+    flash('correct');
+    floatScore(`+${gained}`, btn, true);
+    if (state.streak >= 3) floatScore(`🔥×${state.streak}`, btn, true, 40);
+    spawnSpeedLines();
+    boostCar();
+
+    $('progressFill').style.width = state.progress + '%';
+    if (state.progress >= 100) {
+      // crossed finish!
+      setTimeout(endGame, 600);
+      return;
+    }
+  } else {
+    state.wrong++;
+    state.streak = 0;
+    state.score = Math.max(0, state.score + SCORE_WRONG);
+    state.animSpeed = Math.min(5, state.animSpeed + 0.3);
+    setRoadSpeed(state.animSpeed);
+
+    btn.classList.add('wrong');
+    // reveal correct
+    document.querySelectorAll('.answer-btn').forEach(b => {
+      if (+b.textContent === state.currentAnswer) b.classList.add('correct');
+    });
+    flash('wrong');
+    floatScore(`${SCORE_WRONG}`, btn, false);
+  }
+
+  $('hudScore').textContent   = state.score;
+  $('hudStreak').textContent  = state.streak;
+  $('hudCorrect').textContent = `${state.correct}/${state.correct + state.wrong}`;
+
+  setTimeout(nextQuestion, correct ? 700 : 1100);
+}
+
+function disableAnswers() {
+  document.querySelectorAll('.answer-btn').forEach(b => b.disabled = true);
+}
+
+// ─── VISUAL FX ────────────────────────────────────────────────────────────────
+function flash(type) {
+  const el = type === 'correct' ? $('flashCorrect') : $('flashWrong');
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 180);
+}
+
+function floatScore(text, anchor, positive, xOffset = 0) {
+  const rect = anchor.getBoundingClientRect();
+  const el = document.createElement('div');
+  el.className = `float-score ${positive ? 'pos' : 'neg'}`;
+  el.textContent = text;
+  el.style.left = (rect.left + rect.width / 2 + xOffset) + 'px';
+  el.style.top  = (rect.top) + 'px';
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 950);
+}
+
+function spawnSpeedLines() {
+  for (let i = 0; i < 4; i++) {
+    setTimeout(() => {
+      const line = document.createElement('div');
+      line.className = 'speed-line';
+      line.style.top = (10 + Math.random() * 80) + '%';
+      document.body.appendChild(line);
+      setTimeout(() => line.remove(), 420);
+    }, i * 60);
+  }
+}
+
+function boostCar() {
+  const car = $('playerCar');
+  car.style.transform = 'scaleX(-1) scaleY(1.12) translateX(-8px)';
+  setTimeout(() => car.style.transform = 'scaleX(-1)', 250);
+}
+
+// ─── END GAME ────────────────────────────────────────────────────────────────
+function endGame() {
+  clearInterval(state.timerInterval);
+  disableAnswers();
+
+  const total = state.correct + state.wrong;
+  const accuracy = total ? Math.round((state.correct / total) * 100) : 0;
+
+  // Messages
+  const msgs = accuracy >= 90
+    ? ["Amazing! You're a maths champion! 🏆", "Incredible accuracy! Future Formula 1 engineer! 🚀"]
+    : accuracy >= 70
+    ? ["Great driving! Keep practising! 🏎️", "Solid race! Your skills are speeding up! ⚡"]
+    : accuracy >= 50
+    ? ["Good effort! Every race makes you better! 💪", "You're on the right track! Keep going! 🛣️"]
+    : ["Keep practising — you'll get faster! 🔧", "The chequered flag is within reach! Don't give up! 🏁"];
+  const msg = msgs[Math.floor(Math.random() * msgs.length)];
+
+  const raceFinished = state.progress >= 100;
+  $('resultTrophy').textContent = raceFinished ? '🏆' : (accuracy >= 70 ? '🥈' : '🎖️');
+  $('resultTitle').textContent  = raceFinished ? 'Race Complete!' : 'Time\'s Up!';
+  $('resFinalScore').textContent = state.score;
+  $('resAccuracy').textContent   = accuracy + '%';
+  $('resCorrect').textContent    = state.correct;
+  $('resBestStreak').textContent = state.bestStreak;
+  $('resultMessage').textContent = msg;
+
+  // Save score
+  const isNew = saveScore(state.name, state.score, accuracy, [...state.tables]);
+  $('newRecord').classList.toggle('visible', isNew);
+
+  showScreen('result');
+}
+
+// ─── SCORES ──────────────────────────────────────────────────────────────────
+const SCORES_KEY = 'ttturbo_scores';
+function loadScores() {
+  try { return JSON.parse(localStorage.getItem(SCORES_KEY)) || []; }
+  catch { return []; }
+}
+function saveScore(name, score, accuracy, tables) {
+  const scores = loadScores();
+  const isNew  = scores.length === 0 || score > scores[0].score;
+  scores.push({ name, score, accuracy, tables: tables.join(','), date: new Date().toLocaleDateString() });
+  scores.sort((a, b) => b.score - a.score);
+  localStorage.setItem(SCORES_KEY, JSON.stringify(scores.slice(0, 20)));
+  return isNew;
+}
+
+function showScoreboard(returnTo) {
+  const scores = loadScores();
+  const body   = $('scoreBody');
+  body.innerHTML = '';
+  if (scores.length === 0) {
+    $('scoreEmpty').style.display = 'block';
+  } else {
+    $('scoreEmpty').style.display = 'none';
+    scores.slice(0, 10).forEach((s, i) => {
+      const medals = ['🥇','🥈','🥉'];
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${medals[i] || i+1}</td>
+        <td>${s.name}</td>
+        <td>${s.score}</td>
+        <td>${s.accuracy}%</td>
+        <td>×${s.tables}</td>
+      `;
+      body.appendChild(tr);
+    });
+  }
+  $('scoreBackBtn').onclick = () => showScreen(returnTo || 'menu');
+  showScreen('score');
+}
+
+// ─── RESULT BUTTONS ──────────────────────────────────────────────────────────
+$('playAgainBtn').addEventListener('click', () => {
+  showScreen('game');
+  startGame();
+});
+$('menuBtn').addEventListener('click', () => showScreen('menu'));
+$('resultScoresBtn').addEventListener('click', () => showScoreboard('result'));
+
+// ─── KEYBOARD SUPPORT ────────────────────────────────────────────────────────
+document.addEventListener('keydown', e => {
+  const btns = document.querySelectorAll('.answer-btn:not(:disabled)');
+  const map = {'1': 0, '2': 1, '3': 2, '4': 3};
+  if (map[e.key] !== undefined && btns[map[e.key]]) btns[map[e.key]].click();
+  if (e.key === 'Enter' && $('gameScreen').classList.contains('active') === false) {
+    if (!$('startBtn').disabled) $('startBtn').click();
+  }
+});
+
+// ─── INIT ────────────────────────────────────────────────────────────────────
+buildMenu();
+</script>
+</body>
+</html>
