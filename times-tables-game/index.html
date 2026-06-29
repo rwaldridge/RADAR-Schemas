@@ -25,11 +25,10 @@
     overflow: hidden;
   }
 
-  /* ── SCREENS ── */
   .screen { display: none; width: 100vw; height: 100vh; }
   .screen.active { display: flex; }
 
-  /* ── MENU SCREEN ── */
+  /* ── MENU ── */
   #menuScreen {
     flex-direction: column;
     align-items: center;
@@ -38,12 +37,7 @@
     position: relative;
     overflow: hidden;
   }
-
-  .clouds {
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    pointer-events: none;
-  }
+  .clouds { position: absolute; top: 0; left: 0; right: 0; pointer-events: none; }
   .cloud {
     position: absolute;
     background: white;
@@ -51,122 +45,91 @@
     opacity: 0.9;
     animation: drift linear infinite;
   }
-  .cloud::before, .cloud::after {
-    content: '';
-    position: absolute;
-    background: white;
-    border-radius: 50%;
-  }
-  @keyframes drift {
-    from { transform: translateX(-150px); }
-    to   { transform: translateX(110vw); }
-  }
+  .cloud::before, .cloud::after { content: ''; position: absolute; background: white; border-radius: 50%; }
+  @keyframes drift { from { transform: translateX(-150px); } to { transform: translateX(110vw); } }
 
-  .menu-title {
-    text-align: center;
-    z-index: 10;
-    margin-bottom: 30px;
-  }
+  .menu-title { text-align: center; z-index: 10; margin-bottom: 20px; }
   .menu-title h1 {
-    font-size: clamp(2rem, 6vw, 4rem);
+    font-size: clamp(1.8rem, 6vw, 3.5rem);
     color: #fff;
     text-shadow: 3px 3px 0 #e65100, -1px -1px 0 #e65100;
     letter-spacing: 2px;
     line-height: 1.1;
   }
-  .menu-title p {
-    font-size: 1.1rem;
-    color: #fff;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
-    margin-top: 6px;
-  }
+  .menu-title p { font-size: 1rem; color: #fff; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); margin-top: 6px; }
 
-  .menu-car {
-    font-size: 5rem;
-    animation: bounce 0.6s ease-in-out infinite alternate;
-    z-index: 10;
-    margin-bottom: 10px;
-  }
-  @keyframes bounce {
-    to { transform: translateY(-10px); }
-  }
+  .menu-car { font-size: 4rem; animation: bounce 0.6s ease-in-out infinite alternate; z-index: 10; margin-bottom: 8px; }
+  @keyframes bounce { to { transform: translateY(-10px); } }
 
   .menu-card {
     background: rgba(255,255,255,0.92);
     border-radius: 20px;
-    padding: 30px 40px;
+    padding: 22px 32px;
     z-index: 10;
     box-shadow: 0 8px 32px rgba(0,0,0,0.2);
     max-width: 480px;
     width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
   }
-
-  .menu-card label {
-    display: block;
-    font-weight: 700;
-    color: #333;
-    margin-bottom: 8px;
-    font-size: 1rem;
-  }
+  .menu-card label { display: block; font-weight: 700; color: #333; margin-bottom: 6px; font-size: 0.95rem; }
 
   .name-input {
     width: 100%;
-    padding: 12px 16px;
+    padding: 10px 14px;
     border: 3px solid #ddd;
     border-radius: 12px;
-    font-size: 1.1rem;
-    margin-bottom: 20px;
+    font-size: 1rem;
+    margin-bottom: 16px;
     transition: border-color 0.2s;
   }
   .name-input:focus { outline: none; border-color: var(--accent); }
 
-  .table-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 8px;
-    margin-bottom: 24px;
-  }
+  .table-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 16px; }
   .table-btn {
-    padding: 10px;
+    padding: 8px 4px;
     border: 3px solid #ddd;
     border-radius: 10px;
     background: white;
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: 700;
     cursor: pointer;
     transition: all 0.15s;
     color: #333;
+    position: relative;
   }
   .table-btn:hover { border-color: var(--accent); background: #fff3ee; }
   .table-btn.selected { background: var(--accent); border-color: var(--accent); color: white; }
+  .table-btn .car-hint {
+    display: block;
+    font-size: 0.85rem;
+    line-height: 1;
+    margin-top: 1px;
+  }
 
   .select-all-btn {
     width: 100%;
-    padding: 10px;
+    padding: 8px;
     border: 3px solid #ddd;
     border-radius: 10px;
     background: white;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     font-weight: 700;
     cursor: pointer;
-    margin-bottom: 16px;
+    margin-bottom: 14px;
     color: #555;
     transition: all 0.15s;
   }
   .select-all-btn:hover { border-color: var(--accent); }
 
-  .difficulty-row {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 24px;
-  }
+  .difficulty-row { display: flex; gap: 8px; margin-bottom: 16px; }
   .diff-btn {
     flex: 1;
-    padding: 10px;
+    padding: 8px;
     border: 3px solid #ddd;
     border-radius: 10px;
     background: white;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     font-weight: 700;
     cursor: pointer;
     transition: all 0.15s;
@@ -174,18 +137,18 @@
   }
   .diff-btn:hover { border-color: #888; }
   .diff-btn.selected { color: white; border-color: transparent; }
-  .diff-btn[data-diff="easy"].selected { background: #4caf50; }
+  .diff-btn[data-diff="easy"].selected   { background: #4caf50; }
   .diff-btn[data-diff="medium"].selected { background: #ff9800; }
-  .diff-btn[data-diff="hard"].selected { background: #f44336; }
+  .diff-btn[data-diff="hard"].selected   { background: #f44336; }
 
   .start-btn {
     width: 100%;
-    padding: 16px;
+    padding: 14px;
     background: var(--accent);
     color: white;
     border: none;
     border-radius: 14px;
-    font-size: 1.3rem;
+    font-size: 1.2rem;
     font-weight: 800;
     cursor: pointer;
     transition: transform 0.1s, box-shadow 0.1s;
@@ -196,74 +159,36 @@
   .start-btn:active { transform: translateY(2px); box-shadow: 0 2px 0 #c0392b; }
   .start-btn:disabled { background: #ccc; box-shadow: 0 4px 0 #aaa; cursor: not-allowed; transform: none; }
 
-  .high-scores-link {
-    text-align: center;
-    margin-top: 14px;
-    font-size: 0.9rem;
-    color: #666;
-    cursor: pointer;
-    text-decoration: underline;
-  }
+  .menu-links { display: flex; gap: 16px; justify-content: center; margin-top: 12px; }
+  .menu-link { font-size: 0.88rem; color: #666; cursor: pointer; text-decoration: underline; }
 
   /* ── GAME SCREEN ── */
-  #gameScreen {
-    flex-direction: column;
-    background: var(--sky);
-    position: relative;
-    overflow: hidden;
-  }
+  #gameScreen { flex-direction: column; background: var(--sky); position: relative; overflow: hidden; }
+  #gameScreen .sky-bg { position: absolute; inset: 0; background: linear-gradient(180deg, #87ceeb 0%, #b8dff5 60%); z-index: 0; }
 
-  /* Sky background with animated clouds */
-  #gameScreen .sky-bg {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(180deg, #87ceeb 0%, #b8dff5 60%);
-    z-index: 0;
-  }
-
-  /* HUD */
   .hud {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 20px;
+    padding: 8px 20px;
     background: rgba(0,0,0,0.75);
     color: white;
     z-index: 20;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 6px;
   }
-  .hud-item {
-    text-align: center;
-  }
-  .hud-label { font-size: 0.65rem; opacity: 0.7; text-transform: uppercase; letter-spacing: 1px; }
-  .hud-value { font-size: 1.4rem; font-weight: 800; }
-  .hud-value.timer { color: var(--gold); }
+  .hud-item { text-align: center; }
+  .hud-label { font-size: 0.6rem; opacity: 0.7; text-transform: uppercase; letter-spacing: 1px; }
+  .hud-value { font-size: 1.3rem; font-weight: 800; }
+  .hud-value.timer     { color: var(--gold); }
   .hud-value.score-val { color: #7ef07e; }
-  .hud-value.streak-val { color: #ff9f43; }
+  .hud-value.streak-val{ color: #ff9f43; }
 
-  /* Race track */
-  .track-container {
-    flex: 1;
-    position: relative;
-    overflow: hidden;
-    z-index: 1;
-  }
+  .track-container { flex: 1; position: relative; overflow: hidden; z-index: 1; }
 
-  .track-scene {
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
-    height: 200px;
-  }
+  .track-scene { position: absolute; bottom: 0; left: 0; right: 0; height: 200px; }
 
-  /* Infinite scrolling road */
-  .road {
-    position: absolute;
-    bottom: 0; left: -50%; right: -50%;
-    height: 100px;
-    background: #555;
-    overflow: hidden;
-  }
+  .road { position: absolute; bottom: 0; left: -50%; right: -50%; height: 100px; background: #555; overflow: hidden; }
   .road-line {
     position: absolute;
     top: 50%;
@@ -274,12 +199,8 @@
     border-radius: 4px;
     animation: roadScroll linear infinite;
   }
-  @keyframes roadScroll {
-    from { left: 110%; }
-    to   { left: -10%; }
-  }
+  @keyframes roadScroll { from { left: 110%; } to { left: -10%; } }
 
-  /* Grass */
   .grass-strip {
     position: absolute;
     bottom: 100px; left: -50%; right: -50%;
@@ -287,40 +208,20 @@
     background: repeating-linear-gradient(90deg, #3a7d44 0px, #3a7d44 60px, #2d6636 60px, #2d6636 120px);
     animation: grassScroll linear infinite;
   }
-  @keyframes grassScroll {
-    from { transform: translateX(0); }
-    to   { transform: translateX(-120px); }
-  }
+  @keyframes grassScroll { from { transform: translateX(0); } to { transform: translateX(-120px); } }
 
-  /* Kerb strips */
   .kerb { position: absolute; left: -50%; right: -50%; height: 14px; overflow: hidden; }
-  .kerb-top { top: 96px; bottom: auto; }
-  .kerb-bottom { bottom: 96px; top: auto; }
+  .kerb-top    { top: 96px; }
+  .kerb-bottom { bottom: 96px; }
   .kerb::after {
     content: '';
     position: absolute;
-    top: 0; left: 0; width: 200%;
-    height: 100%;
+    top: 0; left: 0; width: 200%; height: 100%;
     background: repeating-linear-gradient(90deg, #fff 0px, #fff 20px, #e63946 20px, #e63946 40px);
     animation: kerbScroll linear infinite;
   }
-  @keyframes kerbScroll {
-    from { transform: translateX(0); }
-    to   { transform: translateX(-40px); }
-  }
+  @keyframes kerbScroll { from { transform: translateX(0); } to { transform: translateX(-40px); } }
 
-  /* Background scenery */
-  .scenery {
-    position: absolute;
-    bottom: 200px;
-    animation: sceneryScroll linear infinite;
-  }
-  @keyframes sceneryScroll {
-    from { transform: translateX(110vw); }
-    to   { transform: translateX(-20vw); }
-  }
-
-  /* Player car */
   .player-car {
     position: absolute;
     bottom: 114px;
@@ -331,8 +232,6 @@
     filter: drop-shadow(2px 4px 4px rgba(0,0,0,0.4));
     transform: scaleX(-1);
   }
-
-  /* Opponent car */
   .opponent-car {
     position: absolute;
     bottom: 130px;
@@ -343,11 +242,8 @@
     transform: scaleX(-1);
     animation: opponentRock 0.3s ease-in-out infinite alternate;
   }
-  @keyframes opponentRock {
-    to { transform: scaleX(-1) translateY(-3px); }
-  }
+  @keyframes opponentRock { to { transform: scaleX(-1) translateY(-3px); } }
 
-  /* Progress bar / race track overhead */
   .progress-bar-container {
     position: absolute;
     top: 10px;
@@ -390,7 +286,6 @@
     letter-spacing: 1px;
   }
 
-  /* Question area */
   .question-panel {
     position: absolute;
     left: 50%;
@@ -408,12 +303,7 @@
     margin-bottom: 12px;
     letter-spacing: 1px;
   }
-
-  .answers-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-  }
+  .answers-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   .answer-btn {
     padding: 16px 10px;
     border: none;
@@ -427,23 +317,13 @@
     color: #222;
   }
   .answer-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 0 rgba(0,0,0,0.25); }
-  .answer-btn:active:not(:disabled) { transform: translateY(2px); box-shadow: 0 2px 0 rgba(0,0,0,0.25); }
-  .answer-btn.correct  { background: var(--correct); color: white; animation: pop 0.3s ease; }
-  .answer-btn.wrong    { background: var(--wrong);   color: white; animation: shake 0.3s ease; }
+  .answer-btn:active:not(:disabled){ transform: translateY(2px);  box-shadow: 0 2px 0 rgba(0,0,0,0.25); }
+  .answer-btn.correct { background: var(--correct); color: white; animation: pop 0.3s ease; }
+  .answer-btn.wrong   { background: var(--wrong);   color: white; animation: shake 0.3s ease; }
   .answer-btn:disabled { cursor: default; }
+  @keyframes pop   { 0%{transform:scale(1)}50%{transform:scale(1.12)}100%{transform:scale(1)} }
+  @keyframes shake { 0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)} }
 
-  @keyframes pop {
-    0%  { transform: scale(1); }
-    50% { transform: scale(1.12); }
-    100%{ transform: scale(1); }
-  }
-  @keyframes shake {
-    0%,100% { transform: translateX(0); }
-    25%     { transform: translateX(-8px); }
-    75%     { transform: translateX(8px); }
-  }
-
-  /* Flash overlays */
   .flash-correct, .flash-wrong {
     position: fixed; inset: 0; z-index: 100; pointer-events: none;
     opacity: 0; transition: opacity 0.1s;
@@ -452,7 +332,6 @@
   .flash-wrong   { background: rgba(244,67,54,0.25); }
   .flash-correct.show, .flash-wrong.show { opacity: 1; }
 
-  /* Floating score text */
   .float-score {
     position: fixed;
     font-size: 2rem;
@@ -463,12 +342,8 @@
   }
   .float-score.pos { color: #4caf50; text-shadow: 1px 1px 0 #000; }
   .float-score.neg { color: #f44336; text-shadow: 1px 1px 0 #000; }
-  @keyframes floatUp {
-    0%   { opacity: 1; transform: translateY(0); }
-    100% { opacity: 0; transform: translateY(-80px); }
-  }
+  @keyframes floatUp { 0%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-80px)} }
 
-  /* Speed lines */
   .speed-line {
     position: fixed;
     top: 0; height: 2px;
@@ -477,10 +352,7 @@
     z-index: 50;
     animation: speedLine 0.4s linear forwards;
   }
-  @keyframes speedLine {
-    from { left: 18vw; width: 0; opacity: 1; }
-    to   { left: 0; width: 18vw; opacity: 0; }
-  }
+  @keyframes speedLine { from{left:18vw;width:0;opacity:1} to{left:0;width:18vw;opacity:0} }
 
   /* ── RESULT SCREEN ── */
   #resultScreen {
@@ -489,52 +361,96 @@
     justify-content: center;
     background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
     color: white;
-    gap: 20px;
+    gap: 14px;
     padding: 20px;
+    overflow-y: auto;
   }
-
-  .result-trophy { font-size: 5rem; animation: trophyBounce 0.5s ease-in-out infinite alternate; }
+  .result-trophy { font-size: 4rem; animation: trophyBounce 0.5s ease-in-out infinite alternate; }
   @keyframes trophyBounce { to { transform: translateY(-12px) rotate(5deg); } }
 
   .result-title {
-    font-size: clamp(1.8rem, 5vw, 3rem);
+    font-size: clamp(1.6rem, 5vw, 2.6rem);
     font-weight: 900;
     text-align: center;
     color: var(--gold);
     text-shadow: 2px 2px 0 #8B6914;
   }
 
+  /* Car award panel */
+  .car-award {
+    background: linear-gradient(135deg, rgba(255,215,0,0.15), rgba(255,107,53,0.15));
+    border: 2px solid rgba(255,215,0,0.4);
+    border-radius: 20px;
+    padding: 18px 30px;
+    text-align: center;
+    max-width: 380px;
+    width: 90%;
+    animation: awardPop 0.5s cubic-bezier(0.175,0.885,0.32,1.275);
+  }
+  @keyframes awardPop { from{transform:scale(0.5);opacity:0} to{transform:scale(1);opacity:1} }
+  .car-award-label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--gold);
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .car-award-emoji {
+    font-size: 4.5rem;
+    display: block;
+    animation: carReveal 0.6s ease-out 0.3s both;
+    filter: drop-shadow(0 0 16px rgba(255,215,0,0.8));
+  }
+  @keyframes carReveal { from{transform:translateX(-60px) scaleX(-1);opacity:0} to{transform:translateX(0) scaleX(-1);opacity:1} }
+  .car-award-name {
+    font-size: 1.3rem;
+    font-weight: 900;
+    color: var(--gold);
+    margin-top: 6px;
+  }
+  .car-award-desc {
+    font-size: 0.85rem;
+    opacity: 0.8;
+    margin-top: 2px;
+  }
+  .car-award-new {
+    display: inline-block;
+    background: var(--gold);
+    color: #333;
+    font-weight: 900;
+    font-size: 0.8rem;
+    padding: 3px 12px;
+    border-radius: 20px;
+    margin-top: 8px;
+    animation: pop 0.4s ease;
+  }
+
   .result-stats {
     background: rgba(255,255,255,0.1);
     border-radius: 20px;
-    padding: 24px 40px;
+    padding: 16px 30px;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 16px 32px;
+    gap: 12px 28px;
     text-align: center;
     border: 1px solid rgba(255,255,255,0.15);
-    max-width: 400px;
+    max-width: 380px;
     width: 90%;
   }
-  .stat-item .stat-num { font-size: 2.2rem; font-weight: 900; color: var(--gold); }
-  .stat-item .stat-lbl { font-size: 0.75rem; opacity: 0.7; text-transform: uppercase; letter-spacing: 1px; }
+  .stat-item .stat-num { font-size: 2rem; font-weight: 900; color: var(--gold); }
+  .stat-item .stat-lbl { font-size: 0.7rem; opacity: 0.7; text-transform: uppercase; letter-spacing: 1px; }
 
-  .result-message {
-    font-size: 1.1rem;
-    text-align: center;
-    max-width: 400px;
-    opacity: 0.85;
-    padding: 0 10px;
-  }
+  .result-message { font-size: 1rem; text-align: center; max-width: 380px; opacity: 0.85; padding: 0 10px; }
 
-  .result-btns { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; }
+  .result-btns { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
   .btn-primary {
-    padding: 14px 32px;
+    padding: 12px 28px;
     background: var(--accent);
     color: white;
     border: none;
     border-radius: 14px;
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: 800;
     cursor: pointer;
     box-shadow: 0 4px 0 #c0392b;
@@ -542,32 +458,31 @@
   }
   .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 0 #c0392b; }
   .btn-secondary {
-    padding: 14px 32px;
+    padding: 12px 28px;
     background: rgba(255,255,255,0.15);
     color: white;
     border: 2px solid rgba(255,255,255,0.3);
     border-radius: 14px;
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: 700;
     cursor: pointer;
     transition: background 0.2s;
   }
   .btn-secondary:hover { background: rgba(255,255,255,0.25); }
 
-  /* new high score badge */
   .new-record {
     background: linear-gradient(135deg, var(--gold), #ff9f43);
     color: #333;
     font-weight: 900;
-    padding: 8px 20px;
+    padding: 6px 18px;
     border-radius: 30px;
-    font-size: 1rem;
+    font-size: 0.95rem;
     animation: pop 0.4s ease;
     display: none;
   }
   .new-record.visible { display: block; }
 
-  /* ── SCOREBOARD SCREEN ── */
+  /* ── SCOREBOARD ── */
   #scoreScreen {
     flex-direction: column;
     align-items: center;
@@ -575,134 +490,164 @@
     color: white;
     padding: 30px 20px;
     overflow-y: auto;
+    gap: 0;
   }
   .score-title { font-size: 2rem; font-weight: 900; color: var(--gold); margin-bottom: 20px; }
-  .score-table {
-    width: min(100%, 500px);
-    border-collapse: collapse;
-    margin-bottom: 20px;
-  }
+  .score-table { width: min(100%, 500px); border-collapse: collapse; margin-bottom: 20px; }
   .score-table th {
     background: rgba(255,255,255,0.1);
-    padding: 12px 16px;
+    padding: 10px 14px;
     text-align: left;
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 1px;
     color: rgba(255,255,255,0.7);
   }
-  .score-table td {
-    padding: 12px 16px;
-    border-bottom: 1px solid rgba(255,255,255,0.08);
-    font-weight: 600;
-  }
-  .score-table tr:nth-child(1) td { color: var(--gold); font-size: 1.1rem; }
+  .score-table td { padding: 10px 14px; border-bottom: 1px solid rgba(255,255,255,0.08); font-weight: 600; }
+  .score-table tr:nth-child(1) td { color: var(--gold); font-size: 1.05rem; }
   .score-table tr:nth-child(2) td { color: #c0c0c0; }
   .score-table tr:nth-child(3) td { color: #cd7f32; }
   .score-empty { opacity: 0.5; font-style: italic; margin: 30px 0; }
+
+  /* ── GARAGE ── */
+  #garageScreen {
+    flex-direction: column;
+    align-items: center;
+    background: linear-gradient(135deg, #0d1117 0%, #1a1a2e 50%, #0f3460 100%);
+    color: white;
+    padding: 24px 16px 30px;
+    overflow-y: auto;
+    gap: 0;
+  }
+  .garage-title {
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: var(--gold);
+    margin-bottom: 4px;
+    text-align: center;
+  }
+  .garage-subtitle {
+    font-size: 0.85rem;
+    opacity: 0.6;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  .garage-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 12px;
+    width: min(100%, 600px);
+    margin-bottom: 24px;
+  }
+  .garage-car {
+    background: rgba(255,255,255,0.07);
+    border: 2px solid rgba(255,255,255,0.1);
+    border-radius: 16px;
+    padding: 14px 8px 10px;
+    text-align: center;
+    transition: transform 0.2s;
+    position: relative;
+  }
+  .garage-car.unlocked {
+    background: rgba(255,215,0,0.08);
+    border-color: rgba(255,215,0,0.35);
+  }
+  .garage-car.unlocked:hover { transform: translateY(-4px); }
+  .garage-car-emoji { font-size: 2.8rem; display: block; margin-bottom: 6px; }
+  .garage-car.locked .garage-car-emoji { filter: grayscale(1) opacity(0.3); }
+  .garage-car-name { font-size: 0.75rem; font-weight: 700; line-height: 1.2; }
+  .garage-car.locked .garage-car-name { opacity: 0.3; }
+  .garage-car-table { font-size: 0.68rem; opacity: 0.6; margin-top: 3px; }
+  .garage-car.locked .garage-car-table { opacity: 0.2; }
+  .garage-car-lock { font-size: 1rem; position: absolute; top: 8px; right: 10px; opacity: 0.3; }
+  .garage-car.unlocked .garage-car-lock { display: none; }
+  .garage-count { font-size: 0.85rem; opacity: 0.6; margin-bottom: 16px; }
 </style>
 </head>
 <body>
 
-<!-- ════════════════ MENU ════════════════ -->
+<!-- ═══ MENU ═══ -->
 <div id="menuScreen" class="screen active">
   <div class="clouds" id="menuClouds"></div>
-
-  <div class="menu-car">🏎️</div>
+  <div class="menu-car" id="menuCarEmoji">🏎️</div>
   <div class="menu-title">
     <h1>Times Tables<br>TURBO</h1>
     <p>Answer fast — race faster! 🏁</p>
   </div>
-
   <div class="menu-card">
     <label for="playerName">Your name, driver</label>
-    <input type="text" id="playerName" class="name-input" placeholder="e.g. Max Speed" maxlength="16" autocomplete="off">
+    <input type="text" id="playerName" class="name-input" placeholder="e.g. Felix Speedster" maxlength="16" autocomplete="off">
 
-    <label>Which tables? (pick at least one)</label>
+    <label>Which tables? (harder tables = cooler car!)</label>
     <div class="table-grid" id="tableGrid"></div>
     <button class="select-all-btn" id="selectAllBtn">Select all tables</button>
 
     <label>Difficulty</label>
     <div class="difficulty-row">
-      <button class="diff-btn selected" data-diff="easy">🟢 Easy<br><small>60s</small></button>
-      <button class="diff-btn" data-diff="medium">🟡 Medium<br><small>45s</small></button>
-      <button class="diff-btn" data-diff="hard">🔴 Hard<br><small>30s</small></button>
+      <button class="diff-btn selected" data-diff="easy">🟢 Easy<br><small>90s</small></button>
+      <button class="diff-btn" data-diff="medium">🟡 Medium<br><small>60s</small></button>
+      <button class="diff-btn" data-diff="hard">🔴 Hard<br><small>45s</small></button>
     </div>
 
     <button class="start-btn" id="startBtn" disabled>🏁 Start Race!</button>
-    <div class="high-scores-link" id="showScoresLink">🏆 High Scores</div>
+    <div class="menu-links">
+      <span class="menu-link" id="showGarageLink">🚗 My Garage</span>
+      <span class="menu-link" id="showScoresLink">🏆 High Scores</span>
+    </div>
   </div>
 </div>
 
-<!-- ════════════════ GAME ════════════════ -->
+<!-- ═══ GAME ═══ -->
 <div id="gameScreen" class="screen">
   <div class="sky-bg"></div>
-
-  <!-- HUD -->
   <div class="hud">
-    <div class="hud-item">
-      <div class="hud-label">Driver</div>
-      <div class="hud-value" id="hudName">—</div>
-    </div>
-    <div class="hud-item">
-      <div class="hud-label">Time</div>
-      <div class="hud-value timer" id="hudTimer">60</div>
-    </div>
-    <div class="hud-item">
-      <div class="hud-label">Score</div>
-      <div class="hud-value score-val" id="hudScore">0</div>
-    </div>
-    <div class="hud-item">
-      <div class="hud-label">Streak 🔥</div>
-      <div class="hud-value streak-val" id="hudStreak">0</div>
-    </div>
-    <div class="hud-item">
-      <div class="hud-label">Correct</div>
-      <div class="hud-value" id="hudCorrect">0/0</div>
-    </div>
+    <div class="hud-item"><div class="hud-label">Driver</div><div class="hud-value" id="hudName">—</div></div>
+    <div class="hud-item"><div class="hud-label">Time</div><div class="hud-value timer" id="hudTimer">90</div></div>
+    <div class="hud-item"><div class="hud-label">Score</div><div class="hud-value score-val" id="hudScore">0</div></div>
+    <div class="hud-item"><div class="hud-label">Streak 🔥</div><div class="hud-value streak-val" id="hudStreak">0</div></div>
+    <div class="hud-item"><div class="hud-label">Correct</div><div class="hud-value" id="hudCorrect">0/0</div></div>
   </div>
-
-  <div class="track-container" id="trackContainer">
-    <!-- Progress bar -->
+  <div class="track-container">
     <div class="progress-bar-container">
-      <div class="progress-label">
-        <span>🚦 Start</span>
-        <span>🏁 Finish</span>
-      </div>
+      <div class="progress-label"><span>🚦 Start</span><span>🏁 Finish</span></div>
       <div class="progress-track">
         <div class="progress-fill" id="progressFill" style="width:0%">
-          <span class="progress-car-icon">🏎️</span>
+          <span class="progress-car-icon" id="progressCarIcon">🏎️</span>
         </div>
       </div>
     </div>
-
-    <!-- Question -->
     <div class="question-panel">
       <div class="question-text" id="questionText">3 × 7 = ?</div>
       <div class="answers-grid" id="answersGrid"></div>
     </div>
-
-    <!-- Track scene -->
-    <div class="track-scene" id="trackScene">
+    <div class="track-scene">
       <div class="grass-strip" id="grassStrip"></div>
-      <div class="kerb kerb-top" id="kerbTop"></div>
+      <div class="kerb kerb-top"></div>
       <div class="road" id="road"></div>
-      <div class="kerb kerb-bottom" id="kerbBottom"></div>
+      <div class="kerb kerb-bottom"></div>
       <div class="player-car" id="playerCar">🏎️</div>
       <div class="opponent-car" id="opponentCar">🚗</div>
     </div>
   </div>
-
-  <!-- Flash overlays -->
   <div class="flash-correct" id="flashCorrect"></div>
   <div class="flash-wrong"   id="flashWrong"></div>
 </div>
 
-<!-- ════════════════ RESULT ════════════════ -->
+<!-- ═══ RESULT ═══ -->
 <div id="resultScreen" class="screen">
   <div class="result-trophy" id="resultTrophy">🏆</div>
   <div class="result-title" id="resultTitle">Race Over!</div>
   <div class="new-record" id="newRecord">🌟 NEW HIGH SCORE!</div>
+
+  <!-- Car award (shown only on race completion) -->
+  <div class="car-award" id="carAward" style="display:none">
+    <div class="car-award-label">🏆 Car Unlocked!</div>
+    <span class="car-award-emoji" id="carAwardEmoji">🏎️</span>
+    <div class="car-award-name" id="carAwardName">Formula Racer</div>
+    <div class="car-award-desc" id="carAwardDesc">Built for the track!</div>
+    <span class="car-award-new" id="carAwardNew">✨ NEW!</span>
+  </div>
+
   <div class="result-stats">
     <div class="stat-item"><div class="stat-num" id="resFinalScore">0</div><div class="stat-lbl">Score</div></div>
     <div class="stat-item"><div class="stat-num" id="resAccuracy">0%</div><div class="stat-lbl">Accuracy</div></div>
@@ -711,16 +656,17 @@
   </div>
   <div class="result-message" id="resultMessage"></div>
   <div class="result-btns">
-    <button class="btn-primary" id="playAgainBtn">🔄 Race Again</button>
+    <button class="btn-primary"   id="playAgainBtn">🔄 Race Again</button>
     <button class="btn-secondary" id="menuBtn">🏠 Menu</button>
+    <button class="btn-secondary" id="resultGarageBtn">🚗 Garage</button>
     <button class="btn-secondary" id="resultScoresBtn">🏆 Scores</button>
   </div>
 </div>
 
-<!-- ════════════════ SCOREBOARD ════════════════ -->
+<!-- ═══ SCOREBOARD ═══ -->
 <div id="scoreScreen" class="screen">
   <div class="score-title">🏆 Hall of Fame</div>
-  <table class="score-table" id="scoreTable">
+  <table class="score-table">
     <thead><tr><th>#</th><th>Driver</th><th>Score</th><th>Accuracy</th><th>Tables</th></tr></thead>
     <tbody id="scoreBody"></tbody>
   </table>
@@ -728,68 +674,120 @@
   <button class="btn-primary" id="scoreBackBtn">← Back</button>
 </div>
 
-<script>
-// ─── STATE ───────────────────────────────────────────────────────────────────
-const DIFFICULTY = { easy: 60, medium: 45, hard: 30 };
-const SCORE_CORRECT   = 10;
-const SCORE_WRONG     = -3;
-const STREAK_BONUS    = 5;  // extra per question when streak ≥ 3
-const MAX_LAPS        = 20; // questions to "finish the race"
+<!-- ═══ GARAGE ═══ -->
+<div id="garageScreen" class="screen">
+  <div class="garage-title">🚗 My Garage</div>
+  <div class="garage-subtitle">Complete races to unlock more cars!</div>
+  <div class="garage-count" id="garageCount">0 / 12 cars unlocked</div>
+  <div class="garage-grid" id="garageGrid"></div>
+  <button class="btn-primary" id="garageBackBtn">← Back</button>
+</div>
 
-let state = {
-  name: '',
-  tables: new Set(),
-  difficulty: 'easy',
-  score: 0,
-  correct: 0,
-  wrong: 0,
-  streak: 0,
-  bestStreak: 0,
-  progress: 0,   // 0-100
-  timeLeft: 60,
-  timerInterval: null,
-  answered: false,
-  animSpeed: 4,  // seconds per road line cycle
-  currentAnswer: null,
-  questionCount: 0,
+<script>
+// ─── CARS & DIFFICULTY ───────────────────────────────────────────────────────
+
+// Difficulty tier for each times table (1 = easiest, 12 = hardest)
+const TABLE_DIFFICULTY = {
+  1: 1, 2: 2, 10: 3, 5: 4, 3: 5, 4: 6, 6: 7, 9: 8, 8: 9, 11: 10, 7: 11, 12: 12
 };
 
-// ─── DOM REFS ────────────────────────────────────────────────────────────────
-const screens     = { menu: menuScreen, game: gameScreen, result: resultScreen, score: scoreScreen };
-const $ = id => document.getElementById(id);
+// 12 cars, from basic to legendary — earned by completing races with harder tables
+const CARS = [
+  { emoji: '🛺', name: 'Wobbly Tuk-Tuk',       desc: 'Not fast, but it\'s a start!',      table: '×1'  },
+  { emoji: '🚗', name: 'Learner Hatchback',     desc: 'Every champion starts here.',       table: '×2'  },
+  { emoji: '🚙', name: 'Trusty 4x4',            desc: 'Solid and dependable.',             table: '×10' },
+  { emoji: '🚕', name: 'Yellow Speedster',      desc: 'Always in a hurry!',                table: '×5'  },
+  { emoji: '🚐', name: 'Turbo Van',             desc: 'More power than it looks!',         table: '×3'  },
+  { emoji: '🏎️', name: 'Formula Racer',        desc: 'Built for the track!',              table: '×4'  },
+  { emoji: '🚓', name: 'Police Interceptor',    desc: 'Lightning-fast response!',          table: '×6'  },
+  { emoji: '🚒', name: 'Fire Fury',             desc: 'Blazing hot speed!',                table: '×9'  },
+  { emoji: '🚑', name: 'Turbo Medic',           desc: 'Fastest in the city!',              table: '×8'  },
+  { emoji: '🛻', name: 'Thunder Pickup',        desc: 'Raw power, zero limits!',           table: '×11' },
+  { emoji: '🚀', name: 'Space Rocket',          desc: 'It defies gravity!',                table: '×7'  },
+  { emoji: '🛸', name: 'Alien UFO Supreme',     desc: 'Out of this world! 👽',             table: '×12' },
+];
 
-// ─── SCREENS ─────────────────────────────────────────────────────────────────
+const DIFFICULTY = { easy: 90, medium: 60, hard: 45 };
+const SCORE_CORRECT = 10;
+const SCORE_WRONG   = -3;
+const STREAK_BONUS  = 5;
+const MAX_LAPS      = 20;
+
+// ─── STATE ───────────────────────────────────────────────────────────────────
+let state = {
+  name: '', tables: new Set(), difficulty: 'easy',
+  score: 0, correct: 0, wrong: 0, streak: 0, bestStreak: 0,
+  progress: 0, timeLeft: 90, timerInterval: null,
+  answered: false, animSpeed: 4, currentAnswer: null, questionCount: 0,
+};
+
+let scoreboardReturnTo = 'menu';
+let garageReturnTo     = 'menu';
+
+// ─── DOM ─────────────────────────────────────────────────────────────────────
+const $ = id => document.getElementById(id);
+const screens = { menu: menuScreen, game: gameScreen, result: resultScreen, score: scoreScreen, garage: garageScreen };
+
 function showScreen(name) {
   Object.values(screens).forEach(s => s.classList.remove('active'));
   screens[name].classList.add('active');
 }
 
-// ─── MENU SETUP ──────────────────────────────────────────────────────────────
+// ─── GARAGE STORAGE ──────────────────────────────────────────────────────────
+const GARAGE_KEY = 'ttturbo_garage';
+function loadGarage() {
+  try { return new Set(JSON.parse(localStorage.getItem(GARAGE_KEY)) || []); }
+  catch { return new Set(); }
+}
+function saveGarageItem(carIndex) {
+  const g = loadGarage();
+  const isNew = !g.has(carIndex);
+  g.add(carIndex);
+  localStorage.setItem(GARAGE_KEY, JSON.stringify([...g]));
+  return isNew;
+}
+function bestUnlockedCar() {
+  const g = loadGarage();
+  let best = -1;
+  g.forEach(i => { if (i > best) best = i; });
+  return best; // -1 = nothing unlocked yet
+}
+
+// ─── CAR FOR SELECTED TABLES ─────────────────────────────────────────────────
+function carIndexForTables(tables) {
+  if (!tables.size) return 0;
+  let maxTier = 0;
+  tables.forEach(t => { const tier = TABLE_DIFFICULTY[t] || 1; if (tier > maxTier) maxTier = tier; });
+  return maxTier - 1; // index into CARS array
+}
+
+// ─── MENU ────────────────────────────────────────────────────────────────────
 function buildMenu() {
-  // Table buttons 1-12
   const grid = $('tableGrid');
   grid.innerHTML = '';
   for (let i = 1; i <= 12; i++) {
-    const btn = document.createElement('button');
-    btn.className = 'table-btn';
-    btn.textContent = `×${i}`;
+    const tier  = TABLE_DIFFICULTY[i];
+    const car   = CARS[tier - 1];
+    const btn   = document.createElement('button');
+    btn.className   = 'table-btn';
     btn.dataset.table = i;
+    btn.innerHTML = `×${i}<span class="car-hint">${car.emoji}</span>`;
+    btn.title = `${car.name}`;
     btn.addEventListener('click', () => {
       btn.classList.toggle('selected');
       if (btn.classList.contains('selected')) state.tables.add(i);
       else state.tables.delete(i);
       updateStartBtn();
+      updateMenuCar();
     });
     grid.appendChild(btn);
   }
 
-  // Default select ×2, ×5, ×10
-  [2,5,10].forEach(n => {
+  [2, 5, 10].forEach(n => {
     state.tables.add(n);
     grid.querySelector(`[data-table="${n}"]`).classList.add('selected');
   });
 
-  // Difficulty buttons
   document.querySelectorAll('.diff-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('selected'));
@@ -798,7 +796,6 @@ function buildMenu() {
     });
   });
 
-  // Select all
   let allSelected = false;
   $('selectAllBtn').addEventListener('click', () => {
     allSelected = !allSelected;
@@ -809,42 +806,41 @@ function buildMenu() {
     });
     $('selectAllBtn').textContent = allSelected ? 'Deselect all' : 'Select all tables';
     updateStartBtn();
+    updateMenuCar();
   });
 
   $('playerName').addEventListener('input', updateStartBtn);
   $('startBtn').addEventListener('click', startGame);
-  $('showScoresLink').addEventListener('click', () => showScoreboard('menu'));
+  $('showGarageLink').addEventListener('click', () => { garageReturnTo = 'menu'; showGarage(); });
+  $('showScoresLink').addEventListener('click', () => { scoreboardReturnTo = 'menu'; showScoreboard(); });
 
   animateClouds($('menuClouds'), 5);
   updateStartBtn();
+  updateMenuCar();
 }
 
 function updateStartBtn() {
-  const ok = $('playerName').value.trim().length > 0 && state.tables.size > 0;
-  $('startBtn').disabled = !ok;
+  $('startBtn').disabled = !($('playerName').value.trim().length > 0 && state.tables.size > 0);
 }
 
-// ─── CLOUD ANIMATION ─────────────────────────────────────────────────────────
+function updateMenuCar() {
+  const idx = carIndexForTables(state.tables);
+  $('menuCarEmoji').textContent = CARS[idx].emoji;
+}
+
+// ─── CLOUDS ──────────────────────────────────────────────────────────────────
 function animateClouds(container, count) {
   container.innerHTML = '';
   for (let i = 0; i < count; i++) {
     const c = document.createElement('div');
     c.className = 'cloud';
-    const w = 80 + Math.random() * 120;
-    const h = w * 0.45;
-    c.style.cssText = `
-      width:${w}px; height:${h}px;
-      top:${Math.random() * 45}%;
-      animation-duration:${15 + Math.random() * 20}s;
-      animation-delay:-${Math.random() * 30}s;
-    `;
-    c.style.setProperty('--before-w', `${w*0.6}px`);
-    c.style.setProperty('--before-h', `${h*0.8}px`);
+    const w = 80 + Math.random() * 120, h = w * 0.45;
+    c.style.cssText = `width:${w}px;height:${h}px;top:${Math.random()*45}%;animation-duration:${15+Math.random()*20}s;animation-delay:-${Math.random()*30}s`;
     container.appendChild(c);
   }
 }
 
-// ─── ROAD LINES ──────────────────────────────────────────────────────────────
+// ─── ROAD ────────────────────────────────────────────────────────────────────
 function buildRoadLines(road, speed) {
   road.innerHTML = '';
   for (let i = 0; i < 8; i++) {
@@ -852,19 +848,13 @@ function buildRoadLines(road, speed) {
     line.className = 'road-line';
     const dur = speed + Math.random() * 0.5;
     line.style.animationDuration = `${dur}s`;
-    line.style.animationDelay = `-${(i / 8) * dur}s`;
+    line.style.animationDelay    = `-${(i / 8) * dur}s`;
     road.appendChild(line);
   }
 }
-
 function setRoadSpeed(speed) {
-  // lower number = faster
   document.querySelectorAll('.road-line').forEach(l => l.style.animationDuration = `${speed}s`);
   $('grassStrip').style.animationDuration = `${speed * 0.8}s`;
-  document.querySelectorAll('.kerb::after').forEach(k => k.style.animationDuration = `${speed * 0.4}s`);
-  // apply via CSS variable on the road
-  const road = $('road');
-  road.style.setProperty('--spd', `${speed}s`);
 }
 
 // ─── GAME START ───────────────────────────────────────────────────────────────
@@ -872,26 +862,28 @@ function startGame() {
   state.name       = $('playerName').value.trim();
   state.difficulty = document.querySelector('.diff-btn.selected').dataset.diff;
   state.timeLeft   = DIFFICULTY[state.difficulty];
-  state.score      = 0;
-  state.correct    = 0;
-  state.wrong      = 0;
-  state.streak     = 0;
-  state.bestStreak = 0;
+  state.score = state.correct = state.wrong = state.streak = state.bestStreak = 0;
   state.progress   = 0;
   state.animSpeed  = 4;
   state.answered   = false;
   state.questionCount = 0;
 
-  $('hudName').textContent     = state.name;
-  $('hudTimer').textContent    = state.timeLeft;
-  $('hudScore').textContent    = state.score;
-  $('hudStreak').textContent   = state.streak;
-  $('hudCorrect').textContent  = '0/0';
+  // Set player's car: best unlocked or the car for current table selection
+  const best = bestUnlockedCar();
+  const raceCarIdx = best >= 0 ? best : carIndexForTables(state.tables);
+  const raceCar = CARS[raceCarIdx].emoji;
+  $('playerCar').textContent = raceCar;
+  $('progressCarIcon').textContent = raceCar;
+
+  $('hudName').textContent    = state.name;
+  $('hudTimer').textContent   = state.timeLeft;
+  $('hudScore').textContent   = 0;
+  $('hudStreak').textContent  = 0;
+  $('hudCorrect').textContent = '0/0';
   $('progressFill').style.width = '0%';
 
   buildRoadLines($('road'), state.animSpeed);
   showScreen('game');
-
   nextQuestion();
   state.timerInterval = setInterval(tick, 1000);
 }
@@ -900,105 +892,87 @@ function startGame() {
 function tick() {
   state.timeLeft--;
   $('hudTimer').textContent = state.timeLeft;
-  if (state.timeLeft <= 10) $('hudTimer').style.color = '#ff6b6b';
-  else $('hudTimer').style.color = '';
+  $('hudTimer').style.color = state.timeLeft <= 10 ? '#ff6b6b' : '';
   if (state.timeLeft <= 0) endGame();
 }
 
-// ─── QUESTION GENERATION ─────────────────────────────────────────────────────
+// ─── QUESTIONS ───────────────────────────────────────────────────────────────
 function newQuestion() {
   const tables = [...state.tables];
-  const a = tables[Math.floor(Math.random() * tables.length)];
-  const b = Math.floor(Math.random() * 12) + 1;
+  const a      = tables[Math.floor(Math.random() * tables.length)];
+  const b      = Math.floor(Math.random() * 12) + 1;
   const answer = a * b;
-
-  // Generate 3 wrong answers (unique, plausible)
   const wrongs = new Set();
   while (wrongs.size < 3) {
     let w;
     const r = Math.random();
-    if (r < 0.4) w = answer + (Math.floor(Math.random() * 4) + 1) * (Math.random() < 0.5 ? 1 : -1);
+    if      (r < 0.4) w = answer + (Math.floor(Math.random() * 4) + 1) * (Math.random() < 0.5 ? 1 : -1);
     else if (r < 0.7) w = a * (Math.floor(Math.random() * 12) + 1);
-    else w = (Math.floor(Math.random() * 12) + 1) * (Math.floor(Math.random() * 12) + 1);
+    else               w = (Math.floor(Math.random() * 12) + 1) * (Math.floor(Math.random() * 12) + 1);
     if (w !== answer && w > 0 && !wrongs.has(w)) wrongs.add(w);
   }
-
-  const options = [...wrongs, answer].sort(() => Math.random() - 0.5);
-  return { a, b, answer, options };
+  return { a, b, answer, options: [...wrongs, answer].sort(() => Math.random() - 0.5) };
 }
 
 function nextQuestion() {
   if (state.timeLeft <= 0) return;
   const q = newQuestion();
   state.currentAnswer = q.answer;
-  state.answered = false;
+  state.answered      = false;
   state.questionCount++;
-
   $('questionText').textContent = `${q.a} × ${q.b} = ?`;
-
   const grid = $('answersGrid');
   grid.innerHTML = '';
   q.options.forEach(opt => {
     const btn = document.createElement('button');
-    btn.className = 'answer-btn';
+    btn.className   = 'answer-btn';
     btn.textContent = opt;
     btn.addEventListener('click', () => handleAnswer(opt, btn));
     grid.appendChild(btn);
   });
 }
 
-// ─── ANSWER HANDLING ─────────────────────────────────────────────────────────
+// ─── ANSWERS ─────────────────────────────────────────────────────────────────
 function handleAnswer(chosen, btn) {
   if (state.answered || state.timeLeft <= 0) return;
   state.answered = true;
-
-  const correct = chosen === state.currentAnswer;
+  const correct  = chosen === state.currentAnswer;
   disableAnswers();
 
   if (correct) {
     state.correct++;
     state.streak++;
     if (state.streak > state.bestStreak) state.bestStreak = state.streak;
-    const bonus = state.streak >= 3 ? STREAK_BONUS * Math.min(state.streak - 2, 4) : 0;
+    const bonus  = state.streak >= 3 ? STREAK_BONUS * Math.min(state.streak - 2, 4) : 0;
     const gained = SCORE_CORRECT + bonus;
     state.score += gained;
     state.progress = Math.min(100, state.progress + (100 / MAX_LAPS));
     state.animSpeed = Math.max(1.2, state.animSpeed - 0.2);
     setRoadSpeed(state.animSpeed);
-
     btn.classList.add('correct');
     flash('correct');
     floatScore(`+${gained}`, btn, true);
     if (state.streak >= 3) floatScore(`🔥×${state.streak}`, btn, true, 40);
     spawnSpeedLines();
     boostCar();
-
     $('progressFill').style.width = state.progress + '%';
-    if (state.progress >= 100) {
-      // crossed finish!
-      setTimeout(endGame, 600);
-      return;
-    }
+    if (state.progress >= 100) { setTimeout(endGame, 600); return; }
   } else {
     state.wrong++;
     state.streak = 0;
-    state.score = Math.max(0, state.score + SCORE_WRONG);
+    state.score  = Math.max(0, state.score + SCORE_WRONG);
     state.animSpeed = Math.min(5, state.animSpeed + 0.3);
     setRoadSpeed(state.animSpeed);
-
     btn.classList.add('wrong');
-    // reveal correct
     document.querySelectorAll('.answer-btn').forEach(b => {
       if (+b.textContent === state.currentAnswer) b.classList.add('correct');
     });
     flash('wrong');
     floatScore(`${SCORE_WRONG}`, btn, false);
   }
-
   $('hudScore').textContent   = state.score;
   $('hudStreak').textContent  = state.streak;
   $('hudCorrect').textContent = `${state.correct}/${state.correct + state.wrong}`;
-
   setTimeout(nextQuestion, correct ? 700 : 1100);
 }
 
@@ -1006,36 +980,31 @@ function disableAnswers() {
   document.querySelectorAll('.answer-btn').forEach(b => b.disabled = true);
 }
 
-// ─── VISUAL FX ────────────────────────────────────────────────────────────────
+// ─── FX ──────────────────────────────────────────────────────────────────────
 function flash(type) {
   const el = type === 'correct' ? $('flashCorrect') : $('flashWrong');
   el.classList.add('show');
   setTimeout(() => el.classList.remove('show'), 180);
 }
-
 function floatScore(text, anchor, positive, xOffset = 0) {
   const rect = anchor.getBoundingClientRect();
-  const el = document.createElement('div');
-  el.className = `float-score ${positive ? 'pos' : 'neg'}`;
+  const el   = document.createElement('div');
+  el.className   = `float-score ${positive ? 'pos' : 'neg'}`;
   el.textContent = text;
-  el.style.left = (rect.left + rect.width / 2 + xOffset) + 'px';
-  el.style.top  = (rect.top) + 'px';
+  el.style.left  = (rect.left + rect.width / 2 + xOffset) + 'px';
+  el.style.top   = rect.top + 'px';
   document.body.appendChild(el);
   setTimeout(() => el.remove(), 950);
 }
-
 function spawnSpeedLines() {
-  for (let i = 0; i < 4; i++) {
-    setTimeout(() => {
-      const line = document.createElement('div');
-      line.className = 'speed-line';
-      line.style.top = (10 + Math.random() * 80) + '%';
-      document.body.appendChild(line);
-      setTimeout(() => line.remove(), 420);
-    }, i * 60);
-  }
+  for (let i = 0; i < 4; i++) setTimeout(() => {
+    const line = document.createElement('div');
+    line.className = 'speed-line';
+    line.style.top = (10 + Math.random() * 80) + '%';
+    document.body.appendChild(line);
+    setTimeout(() => line.remove(), 420);
+  }, i * 60);
 }
-
 function boostCar() {
   const car = $('playerCar');
   car.style.transform = 'scaleX(-1) scaleY(1.12) translateX(-8px)';
@@ -1047,31 +1016,47 @@ function endGame() {
   clearInterval(state.timerInterval);
   disableAnswers();
 
-  const total = state.correct + state.wrong;
+  const total    = state.correct + state.wrong;
   const accuracy = total ? Math.round((state.correct / total) * 100) : 0;
+  const finished = state.progress >= 100;
 
-  // Messages
   const msgs = accuracy >= 90
-    ? ["Amazing! You're a maths champion! 🏆", "Incredible accuracy! Future Formula 1 engineer! 🚀"]
+    ? ["Amazing! You're a maths champion! 🏆", "Incredible! Future Formula 1 engineer! 🚀"]
     : accuracy >= 70
     ? ["Great driving! Keep practising! 🏎️", "Solid race! Your skills are speeding up! ⚡"]
     : accuracy >= 50
     ? ["Good effort! Every race makes you better! 💪", "You're on the right track! Keep going! 🛣️"]
     : ["Keep practising — you'll get faster! 🔧", "The chequered flag is within reach! Don't give up! 🏁"];
-  const msg = msgs[Math.floor(Math.random() * msgs.length)];
 
-  const raceFinished = state.progress >= 100;
-  $('resultTrophy').textContent = raceFinished ? '🏆' : (accuracy >= 70 ? '🥈' : '🎖️');
-  $('resultTitle').textContent  = raceFinished ? 'Race Complete!' : 'Time\'s Up!';
+  $('resultTrophy').textContent  = finished ? '🏁' : (accuracy >= 70 ? '🥈' : '🎖️');
+  $('resultTitle').textContent   = finished ? 'Race Complete!' : 'Time\'s Up!';
   $('resFinalScore').textContent = state.score;
   $('resAccuracy').textContent   = accuracy + '%';
   $('resCorrect').textContent    = state.correct;
   $('resBestStreak').textContent = state.bestStreak;
-  $('resultMessage').textContent = msg;
+  $('resultMessage').textContent = msgs[Math.floor(Math.random() * msgs.length)];
 
-  // Save score
-  const isNew = saveScore(state.name, state.score, accuracy, [...state.tables]);
-  $('newRecord').classList.toggle('visible', isNew);
+  // Car award
+  const carAward = $('carAward');
+  if (finished) {
+    const carIdx = carIndexForTables(state.tables);
+    const car    = CARS[carIdx];
+    const isNew  = saveGarageItem(carIdx);
+    $('carAwardEmoji').textContent = car.emoji;
+    $('carAwardName').textContent  = car.name;
+    $('carAwardDesc').textContent  = car.desc;
+    $('carAwardNew').style.display = isNew ? 'inline-block' : 'none';
+    if (!isNew) {
+      const label = carAward.querySelector('.car-award-label');
+      label.textContent = isNew ? '🏆 Car Unlocked!' : '🏆 Car Collected!';
+    }
+    carAward.style.display = 'block';
+  } else {
+    carAward.style.display = 'none';
+  }
+
+  const isHighScore = saveScore(state.name, state.score, accuracy, [...state.tables]);
+  $('newRecord').classList.toggle('visible', isHighScore);
 
   showScreen('result');
 }
@@ -1079,8 +1064,7 @@ function endGame() {
 // ─── SCORES ──────────────────────────────────────────────────────────────────
 const SCORES_KEY = 'ttturbo_scores';
 function loadScores() {
-  try { return JSON.parse(localStorage.getItem(SCORES_KEY)) || []; }
-  catch { return []; }
+  try { return JSON.parse(localStorage.getItem(SCORES_KEY)) || []; } catch { return []; }
 }
 function saveScore(name, score, accuracy, tables) {
   const scores = loadScores();
@@ -1091,7 +1075,7 @@ function saveScore(name, score, accuracy, tables) {
   return isNew;
 }
 
-function showScoreboard(returnTo) {
+function showScoreboard() {
   const scores = loadScores();
   const body   = $('scoreBody');
   body.innerHTML = '';
@@ -1100,38 +1084,50 @@ function showScoreboard(returnTo) {
   } else {
     $('scoreEmpty').style.display = 'none';
     scores.slice(0, 10).forEach((s, i) => {
-      const medals = ['🥇','🥈','🥉'];
       const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td>${medals[i] || i+1}</td>
-        <td>${s.name}</td>
-        <td>${s.score}</td>
-        <td>${s.accuracy}%</td>
-        <td>×${s.tables}</td>
-      `;
+      tr.innerHTML = `<td>${['🥇','🥈','🥉'][i] || i+1}</td><td>${s.name}</td><td>${s.score}</td><td>${s.accuracy}%</td><td>×${s.tables}</td>`;
       body.appendChild(tr);
     });
   }
-  $('scoreBackBtn').onclick = () => showScreen(returnTo || 'menu');
   showScreen('score');
 }
 
-// ─── RESULT BUTTONS ──────────────────────────────────────────────────────────
-$('playAgainBtn').addEventListener('click', () => {
-  showScreen('game');
-  startGame();
-});
-$('menuBtn').addEventListener('click', () => showScreen('menu'));
-$('resultScoresBtn').addEventListener('click', () => showScoreboard('result'));
+// ─── GARAGE ──────────────────────────────────────────────────────────────────
+function showGarage() {
+  const unlocked = loadGarage();
+  const grid     = $('garageGrid');
+  grid.innerHTML = '';
+  CARS.forEach((car, i) => {
+    const isUnlocked = unlocked.has(i);
+    const div = document.createElement('div');
+    div.className = `garage-car ${isUnlocked ? 'unlocked' : 'locked'}`;
+    div.innerHTML = `
+      <span class="garage-car-lock">🔒</span>
+      <span class="garage-car-emoji">${car.emoji}</span>
+      <div class="garage-car-name">${isUnlocked ? car.name : '???'}</div>
+      <div class="garage-car-table">${isUnlocked ? 'Complete ' + car.table : 'Locked'}</div>
+    `;
+    if (isUnlocked) div.title = car.desc;
+    grid.appendChild(div);
+  });
+  $('garageCount').textContent = `${unlocked.size} / 12 cars unlocked`;
+  showScreen('garage');
+}
 
-// ─── KEYBOARD SUPPORT ────────────────────────────────────────────────────────
+// ─── BUTTONS ─────────────────────────────────────────────────────────────────
+$('playAgainBtn').addEventListener('click', () => { showScreen('game'); startGame(); });
+$('menuBtn').addEventListener('click', () => showScreen('menu'));
+$('resultGarageBtn').addEventListener('click', () => { garageReturnTo = 'result'; showGarage(); });
+$('resultScoresBtn').addEventListener('click', () => { scoreboardReturnTo = 'result'; showScoreboard(); });
+$('scoreBackBtn').addEventListener('click', () => showScreen(scoreboardReturnTo));
+$('garageBackBtn').addEventListener('click', () => showScreen(garageReturnTo));
+
+// ─── KEYBOARD ────────────────────────────────────────────────────────────────
 document.addEventListener('keydown', e => {
   const btns = document.querySelectorAll('.answer-btn:not(:disabled)');
-  const map = {'1': 0, '2': 1, '3': 2, '4': 3};
+  const map  = { '1': 0, '2': 1, '3': 2, '4': 3 };
   if (map[e.key] !== undefined && btns[map[e.key]]) btns[map[e.key]].click();
-  if (e.key === 'Enter' && $('gameScreen').classList.contains('active') === false) {
-    if (!$('startBtn').disabled) $('startBtn').click();
-  }
+  if (e.key === 'Enter' && !$('gameScreen').classList.contains('active') && !$('startBtn').disabled) $('startBtn').click();
 });
 
 // ─── INIT ────────────────────────────────────────────────────────────────────
