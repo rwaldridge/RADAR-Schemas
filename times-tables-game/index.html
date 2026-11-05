@@ -924,13 +924,8 @@ function newQuestion() {
 
   let questionText, answer;
   if (useDivision) {
-    if (Math.random() < 0.5) {
-      questionText = `${product} ÷ ${a} = ?`;
-      answer = b;
-    } else {
-      questionText = `${product} ÷ ${b} = ?`;
-      answer = a;
-    }
+    questionText = `${product} ÷ ${a} = ?`;
+    answer = b;
   } else {
     questionText = `${a} × ${b} = ?`;
     answer = product;
