@@ -141,6 +141,8 @@
   .diff-btn[data-diff="medium"].selected { background: #ff9800; }
   .diff-btn[data-diff="hard"].selected   { background: #f44336; }
 
+  .mode-btn.selected { background: #5c6bc0; color: white; border-color: transparent; }
+
   .start-btn {
     width: 100%;
     padding: 14px;
@@ -589,6 +591,13 @@
       <button class="diff-btn" data-diff="hard">🔴 Hard<br><small>45s</small></button>
     </div>
 
+    <label>Operation</label>
+    <div class="difficulty-row">
+      <button class="diff-btn mode-btn selected" data-mode="multiply">✖️ Multiply</button>
+      <button class="diff-btn mode-btn" data-mode="divide">➗ Divide</button>
+      <button class="diff-btn mode-btn" data-mode="both">✖️➗ Both</button>
+    </div>
+
     <button class="start-btn" id="startBtn" disabled>🏁 Start Race!</button>
     <div class="menu-links">
       <span class="menu-link" id="showGarageLink">🚗 My Garage</span>
@@ -788,11 +797,18 @@ function buildMenu() {
     grid.querySelector(`[data-table="${n}"]`).classList.add('selected');
   });
 
-  document.querySelectorAll('.diff-btn').forEach(btn => {
+  document.querySelectorAll('.diff-btn:not(.mode-btn)').forEach(btn => {
     btn.addEventListener('click', () => {
-      document.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('selected'));
+      document.querySelectorAll('.diff-btn:not(.mode-btn)').forEach(b => b.classList.remove('selected'));
       btn.classList.add('selected');
       state.difficulty = btn.dataset.diff;
+    });
+  });
+
+  document.querySelectorAll('.mode-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
     });
   });
 
@@ -860,7 +876,8 @@ function setRoadSpeed(speed) {
 // ─── GAME START ───────────────────────────────────────────────────────────────
 function startGame() {
   state.name       = $('playerName').value.trim();
-  state.difficulty = document.querySelector('.diff-btn.selected').dataset.diff;
+  state.difficulty = document.querySelector('.diff-btn.selected:not(.mode-btn)').dataset.diff;
+  state.mode       = document.querySelector('.mode-btn.selected').dataset.mode;
   state.timeLeft   = DIFFICULTY[state.difficulty];
   state.score = state.correct = state.wrong = state.streak = state.bestStreak = 0;
   state.progress   = 0;
@@ -901,17 +918,39 @@ function newQuestion() {
   const tables = [...state.tables];
   const a      = tables[Math.floor(Math.random() * tables.length)];
   const b      = Math.floor(Math.random() * 12) + 1;
-  const answer = a * b;
+  const product = a * b;
+
+  const useDivision = state.mode === 'divide' || (state.mode === 'both' && Math.random() < 0.5);
+
+  let questionText, answer;
+  if (useDivision) {
+    if (Math.random() < 0.5) {
+      questionText = `${product} ÷ ${a} = ?`;
+      answer = b;
+    } else {
+      questionText = `${product} ÷ ${b} = ?`;
+      answer = a;
+    }
+  } else {
+    questionText = `${a} × ${b} = ?`;
+    answer = product;
+  }
+
   const wrongs = new Set();
   while (wrongs.size < 3) {
     let w;
     const r = Math.random();
-    if      (r < 0.4) w = answer + (Math.floor(Math.random() * 4) + 1) * (Math.random() < 0.5 ? 1 : -1);
-    else if (r < 0.7) w = a * (Math.floor(Math.random() * 12) + 1);
-    else               w = (Math.floor(Math.random() * 12) + 1) * (Math.floor(Math.random() * 12) + 1);
+    if (useDivision) {
+      if (r < 0.5) w = answer + (Math.floor(Math.random() * 4) + 1) * (Math.random() < 0.5 ? 1 : -1);
+      else          w = Math.floor(Math.random() * 12) + 1;
+    } else {
+      if      (r < 0.4) w = answer + (Math.floor(Math.random() * 4) + 1) * (Math.random() < 0.5 ? 1 : -1);
+      else if (r < 0.7) w = a * (Math.floor(Math.random() * 12) + 1);
+      else               w = (Math.floor(Math.random() * 12) + 1) * (Math.floor(Math.random() * 12) + 1);
+    }
     if (w !== answer && w > 0 && !wrongs.has(w)) wrongs.add(w);
   }
-  return { a, b, answer, options: [...wrongs, answer].sort(() => Math.random() - 0.5) };
+  return { questionText, answer, options: [...wrongs, answer].sort(() => Math.random() - 0.5) };
 }
 
 function nextQuestion() {
@@ -920,7 +959,7 @@ function nextQuestion() {
   state.currentAnswer = q.answer;
   state.answered      = false;
   state.questionCount++;
-  $('questionText').textContent = `${q.a} × ${q.b} = ?`;
+  $('questionText').textContent = q.questionText;
   const grid = $('answersGrid');
   grid.innerHTML = '';
   q.options.forEach(opt => {
