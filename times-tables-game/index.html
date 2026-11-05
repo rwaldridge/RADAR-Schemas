@@ -564,6 +564,69 @@
   .garage-car-lock { font-size: 1rem; position: absolute; top: 8px; right: 10px; opacity: 0.3; }
   .garage-car.unlocked .garage-car-lock { display: none; }
   .garage-count { font-size: 0.85rem; opacity: 0.6; margin-bottom: 16px; }
+
+  /* ── VICTORY LAP OVERLAY ── */
+  #victoryOverlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 999;
+    background: linear-gradient(180deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .victory-title {
+    font-size: clamp(2rem, 8vw, 3.5rem);
+    font-weight: 900;
+    color: var(--gold);
+    text-shadow: 0 0 30px rgba(255,215,0,0.9), 3px 3px 0 #e65100;
+    letter-spacing: 4px;
+    animation: victoryPulse 0.35s ease-in-out infinite alternate;
+    text-align: center;
+    z-index: 10;
+  }
+  .victory-subtitle {
+    font-size: 1.3rem;
+    color: #fff;
+    margin-top: 10px;
+    opacity: 0.85;
+    z-index: 10;
+  }
+  @keyframes victoryPulse { to { transform: scale(1.06) rotate(-1deg); } }
+  .victory-track {
+    width: 100%;
+    height: 90px;
+    position: relative;
+    overflow: hidden;
+    margin: 24px 0;
+    background: rgba(255,255,255,0.05);
+    border-top: 3px dashed rgba(255,255,255,0.2);
+    border-bottom: 3px dashed rgba(255,255,255,0.2);
+  }
+  .victory-car {
+    position: absolute;
+    font-size: 3.5rem;
+    top: 50%;
+  }
+  @keyframes vZoomRight {
+    from { left: -15%; transform: translateY(-50%); }
+    to   { left: 115%; transform: translateY(-50%); }
+  }
+  @keyframes vZoomLeft {
+    from { left: 115%; transform: translateY(-50%) scaleX(-1); }
+    to   { left: -15%; transform: translateY(-50%) scaleX(-1); }
+  }
+  .confetti-piece {
+    position: absolute;
+    animation: confettiFall linear forwards;
+    pointer-events: none;
+  }
+  @keyframes confettiFall {
+    0%   { transform: translateY(-10px) rotate(0deg);   opacity: 1; }
+    100% { transform: translateY(102vh) rotate(900deg); opacity: 0; }
+  }
 </style>
 </head>
 <body>
@@ -990,7 +1053,7 @@ function handleAnswer(chosen, btn) {
     spawnSpeedLines();
     boostCar();
     $('progressFill').style.width = state.progress + '%';
-    if (state.progress >= 100) { setTimeout(endGame, 600); return; }
+    if (state.progress >= 100) { showVictoryLap(); return; }
   } else {
     state.wrong++;
     state.streak = 0;
@@ -1043,6 +1106,59 @@ function boostCar() {
   const car = $('playerCar');
   car.style.transform = 'scaleX(-1) scaleY(1.12) translateX(-8px)';
   setTimeout(() => car.style.transform = 'scaleX(-1)', 250);
+}
+
+// ─── VICTORY LAP ─────────────────────────────────────────────────────────────
+function spawnConfetti(container) {
+  const colors = ['#ff6b35','#ffd700','#4caf50','#2196f3','#e91e63','#9c27b0','#ffffff'];
+  for (let i = 0; i < 70; i++) {
+    const p = document.createElement('div');
+    p.className = 'confetti-piece';
+    const size = 6 + Math.random() * 10;
+    p.style.cssText = `
+      left:${Math.random()*100}vw;
+      top:-12px;
+      width:${size}px;
+      height:${size}px;
+      background:${colors[Math.floor(Math.random()*colors.length)]};
+      border-radius:${Math.random()>0.5?'50%':'3px'};
+      animation-duration:${1.6+Math.random()*2}s;
+      animation-delay:${Math.random()*0.6}s;
+    `;
+    container.appendChild(p);
+  }
+}
+
+function showVictoryLap() {
+  clearInterval(state.timerInterval);
+  disableAnswers();
+
+  const overlay = document.getElementById('victoryOverlay');
+  const carEl   = document.getElementById('victoryCar');
+  const carIdx  = carIndexForTables(state.tables);
+  carEl.textContent = CARS[carIdx].emoji;
+  overlay.style.display = 'flex';
+
+  spawnConfetti(overlay);
+
+  // Pass 1: left → right
+  carEl.style.animation = 'none';
+  void carEl.offsetWidth;
+  carEl.style.animation = 'vZoomRight 1s ease-in-out forwards';
+
+  // Pass 2: right → left
+  setTimeout(() => {
+    carEl.style.animation = 'none';
+    void carEl.offsetWidth;
+    carEl.style.animation = 'vZoomLeft 1s ease-in-out forwards';
+  }, 1200);
+
+  // Show results
+  setTimeout(() => {
+    overlay.style.display = 'none';
+    overlay.querySelectorAll('.confetti-piece').forEach(p => p.remove());
+    endGame();
+  }, 2500);
 }
 
 // ─── END GAME ────────────────────────────────────────────────────────────────
@@ -1167,5 +1283,13 @@ document.addEventListener('keydown', e => {
 // ─── INIT ────────────────────────────────────────────────────────────────────
 buildMenu();
 </script>
+
+<div id="victoryOverlay">
+  <div class="victory-title">🏁 VICTORY LAP! 🏁</div>
+  <div class="victory-track">
+    <div class="victory-car" id="victoryCar">🏎️</div>
+  </div>
+  <div class="victory-subtitle" id="victorySubtitle">Race Complete!</div>
+</div>
 </body>
 </html>
